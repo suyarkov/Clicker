@@ -3,7 +3,7 @@ unit MainForm;
 interface
 
 uses
-  uCodeKey,
+  uCodeKey, uLanguages,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids;
 
@@ -51,6 +51,7 @@ type
   private
     { Private declarations }
     Profile : TProfile;
+    ListLanguages : TListLanguages;
 
     vTmpX, vTmpY : integer;
     i: integer;
@@ -350,7 +351,7 @@ end;
 procedure TMain.FormCreate(Sender: TObject);
 begin
    Profile := ProfileGet(1);
-
+   ListLanguages := InitListLanguages();
    //Инициализация надписей согласной профилю
    Main.Caption :=
    Profile.Name + ' ' +
