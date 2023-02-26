@@ -41,8 +41,8 @@ object Main: TMain
     Caption = 'LabelMainLanguage'
   end
   object Label2: TLabel
-    Left = 640
-    Top = 440
+    Left = 24
+    Top = 42
     Width = 34
     Height = 15
     Caption = 'Label2'
@@ -87,29 +87,31 @@ object Main: TMain
     Left = 520
     Top = 84
     Width = 104
-    Height = 57
+    Height = 37
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1103#1079#1099#1082#1080
     TabOrder = 4
+    OnClick = ButtonStep1Click
   end
   object Button2: TButton
     Left = 520
-    Top = 160
+    Top = 130
     Width = 104
-    Height = 57
+    Height = 33
     Caption = #1057#1091#1073#1090#1080#1090#1088#1099
     TabOrder = 5
+    OnClick = Button2Click
   end
   object Button3: TButton
     Left = 520
-    Top = 240
+    Top = 176
     Width = 104
-    Height = 57
+    Height = 33
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1082#1083#1080#1087#1072
     TabOrder = 6
   end
   object LoadTask: TButton
-    Left = 528
-    Top = 360
+    Left = 646
+    Top = 96
     Width = 75
     Height = 25
     Caption = 'LoadTask'
@@ -117,51 +119,57 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 8
-    Top = 288
+    Left = 527
+    Top = 336
     Width = 506
     Height = 97
     Lines.Strings = (
       'Memo1')
     TabOrder = 8
-  end
-  object EditFileName: TEdit
-    Left = 630
-    Top = 299
-    Width = 121
-    Height = 23
-    TabOrder = 9
-    Text = 'EditFileName'
+    Visible = False
   end
   object Start: TButton
-    Left = 528
-    Top = 416
+    Left = 646
+    Top = 65
     Width = 75
     Height = 25
     Caption = 'Start'
-    TabOrder = 10
+    TabOrder = 9
     OnClick = StartClick
   end
-  object Edit1: TEdit
-    Left = 659
-    Top = 240
-    Width = 121
+  object CountRepeatCicleEdit: TEdit
+    Left = 115
+    Top = 37
+    Width = 54
     Height = 23
-    TabOrder = 11
-    Text = 'Edit1'
+    TabOrder = 10
+    Text = 'CountRepeatCicleEdit'
   end
-  object StringGrid1: TStringGrid
-    Left = 680
-    Top = 31
-    Width = 65
-    Height = 66
-    Color = clBtnFace
-    DefaultColWidth = 285
-    FixedCols = 0
-    RowCount = 1
-    FixedRows = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goFixedRowDefAlign]
+  object TestButton: TButton
+    Left = 646
+    Top = 176
+    Width = 75
+    Height = 25
+    Caption = 'TestButton'
+    TabOrder = 11
+    OnClick = TestButtonClick
+  end
+  object GetXYMouse: TButton
+    Left = 646
+    Top = 252
+    Width = 88
+    Height = 25
+    Caption = 'GetXYMouse'
     TabOrder = 12
+    OnClick = GetXYMouseClick
+  end
+  object XYMouse: TEdit
+    Left = 646
+    Top = 215
+    Width = 88
+    Height = 23
+    TabOrder = 13
+    Text = 'XYMouse'
   end
   object OpenDialog1: TOpenDialog
     Left = 528
