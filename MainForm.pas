@@ -35,8 +35,8 @@ type
     EditCountNameLetters: TEdit;
     EditCountInfoLetters: TEdit;
     ButtonStep1: TButton;
-    Button2: TButton;
-    Button3: TButton;
+    ButtonStep2: TButton;
+    ButtonStep3: TButton;
     LabelCountLanguages: TLabel;
     LabelMainLanguage: TLabel;
     LoadTask: TButton;
@@ -56,13 +56,12 @@ type
     procedure TestButtonClick(Sender: TObject);
     procedure ButtonStep1Click(Sender: TObject);
     procedure GetXYMouseClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure ButtonStep2Click(Sender: TObject);
   private
     { Private declarations }
     Profile: TProfile;  // настройка профил€ дл€ разных расширений, разных каналов.
     ListLanguages: TListLanguages; // список всех возможных €зыков в системе
     vTmpX, vTmpY: integer;  // координаты мышки дл€ их устноавки
-    i: integer; // просто дл€ счетчиков в цикле
     Rec: Array [1 .. 1000] of TRecord; // записи дл€ действий, создаютс€ по файлу
     CountRec: integer; // количество действий
     CountRepeatCicle: integer; // количество циклов действий
@@ -300,6 +299,7 @@ begin
   vCountCicle := 0;
   repeat
     vCountCicle := vCountCicle + 1;
+    vX := 0; vY:= 0; vX2:= 0; vY2:= 0;
     for i := 2 to CountRec - 1 do
     begin
       case Rec[i].TypeComand of
@@ -346,7 +346,7 @@ begin
     end;
 
     // если это не последний цикл то можем выйти по движению мышки
-    if vCountCicle >= CountRepeatCicle then
+    if vCountCicle < CountRepeatCicle then
     begin
       vX := MyMouse.CursorPos.x;
       vY := MyMouse.CursorPos.y;
@@ -357,9 +357,9 @@ begin
       '=' + IntToStr(vY2);
     end;
 
-  until (vX2 <> vX) or (vY2 <> vY)
-         or (vCountCicle >= CountRepeatCicle);
-  showmessage('«авершено');
+  until (vX2 <> vX) or (vY2 <> vY) or (vCountCicle >= CountRepeatCicle);
+
+  showmessage('«авершено '+ IntToStr(vCountCicle) + ' = ' + IntToStr(CountRepeatCicle));
 end;
 
 procedure TMain.TestButtonClick(Sender: TObject);
@@ -371,7 +371,7 @@ begin
   ShowMessage(vPath);
 end;
 
-procedure TMain.Button2Click(Sender: TObject);
+procedure TMain.ButtonStep2Click(Sender: TObject);
 const
   cNameFile: string = 'Step2.cls';
 var

@@ -3,13 +3,14 @@ object Main: TMain
   Top = 0
   Caption = 'Main'
   ClientHeight = 467
-  ClientWidth = 788
+  ClientWidth = 657
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poDesigned
   OnCreate = FormCreate
   TextHeight = 15
   object LabelClipName: TLabel
@@ -27,22 +28,22 @@ object Main: TMain
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1082#1083#1080#1087#1072' ('#1085#1077' '#1073#1086#1083#1077#1077' 5000 '#1089#1080#1084#1074#1086#1083#1086#1074')'
   end
   object LabelCountLanguages: TLabel
-    Left = 296
-    Top = 16
+    Left = 527
+    Top = 37
     Width = 118
     Height = 15
     Caption = 'LabelCountLanguages'
   end
   object LabelMainLanguage: TLabel
-    Left = 24
+    Left = 527
     Top = 16
     Width = 107
     Height = 15
     Caption = 'LabelMainLanguage'
   end
   object Label2: TLabel
-    Left = 24
-    Top = 42
+    Left = 451
+    Top = 58
     Width = 34
     Height = 15
     Caption = 'Label2'
@@ -84,34 +85,34 @@ object Main: TMain
     Text = 'EditCountInfoLetters'
   end
   object ButtonStep1: TButton
-    Left = 520
-    Top = 84
+    Left = 24
+    Top = 8
     Width = 104
     Height = 37
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1103#1079#1099#1082#1080
     TabOrder = 4
     OnClick = ButtonStep1Click
   end
-  object Button2: TButton
-    Left = 520
-    Top = 130
-    Width = 104
-    Height = 33
-    Caption = #1057#1091#1073#1090#1080#1090#1088#1099
+  object ButtonStep2: TButton
+    Left = 148
+    Top = 8
+    Width = 126
+    Height = 37
+    Caption = #1055#1077#1088#1077#1074#1086#1076' '#1089#1091#1073#1090#1080#1090#1088#1086#1074
     TabOrder = 5
-    OnClick = Button2Click
+    OnClick = ButtonStep2Click
   end
-  object Button3: TButton
-    Left = 520
-    Top = 176
-    Width = 104
-    Height = 33
-    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1082#1083#1080#1087#1072
+  object ButtonStep3: TButton
+    Left = 296
+    Top = 8
+    Width = 129
+    Height = 37
+    Caption = #1055#1077#1088#1077#1074#1086#1076' '#1086#1087#1080#1089#1072#1085#1080#1103
     TabOrder = 6
   end
   object LoadTask: TButton
-    Left = 646
-    Top = 96
+    Left = 527
+    Top = 114
     Width = 75
     Height = 25
     Caption = 'LoadTask'
@@ -119,18 +120,17 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 527
-    Top = 336
+    Left = 55
+    Top = 288
     Width = 506
     Height = 97
     Lines.Strings = (
       'Memo1')
     TabOrder = 8
-    Visible = False
   end
   object Start: TButton
-    Left = 646
-    Top = 65
+    Left = 527
+    Top = 83
     Width = 75
     Height = 25
     Caption = 'Start'
@@ -138,16 +138,16 @@ object Main: TMain
     OnClick = StartClick
   end
   object CountRepeatCicleEdit: TEdit
-    Left = 115
-    Top = 37
+    Left = 451
+    Top = 8
     Width = 54
     Height = 23
     TabOrder = 10
     Text = 'CountRepeatCicleEdit'
   end
   object TestButton: TButton
-    Left = 646
-    Top = 176
+    Left = 527
+    Top = 159
     Width = 75
     Height = 25
     Caption = 'TestButton'
@@ -155,8 +155,8 @@ object Main: TMain
     OnClick = TestButtonClick
   end
   object GetXYMouse: TButton
-    Left = 646
-    Top = 252
+    Left = 527
+    Top = 219
     Width = 88
     Height = 25
     Caption = 'GetXYMouse'
@@ -164,15 +164,15 @@ object Main: TMain
     OnClick = GetXYMouseClick
   end
   object XYMouse: TEdit
-    Left = 646
-    Top = 215
+    Left = 527
+    Top = 190
     Width = 88
     Height = 23
     TabOrder = 13
     Text = 'XYMouse'
   end
   object OpenDialog1: TOpenDialog
-    Left = 528
-    Top = 32
+    Left = 448
+    Top = 128
   end
 end
