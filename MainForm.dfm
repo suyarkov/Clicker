@@ -69,17 +69,17 @@ object Main: TMain
     OnChange = MemoClipInfoChange
   end
   object EditCountNameLetters: TEdit
-    Left = 296
+    Left = 279
     Top = 55
-    Width = 137
+    Width = 50
     Height = 23
     TabOrder = 2
     Text = 'EditCountNameLetters'
   end
   object EditCountInfoLetters: TEdit
-    Left = 296
-    Top = 135
-    Width = 137
+    Left = 280
+    Top = 131
+    Width = 49
     Height = 23
     TabOrder = 3
     Text = 'EditCountInfoLetters'
@@ -120,13 +120,14 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 55
-    Top = 288
+    Left = 567
+    Top = 296
     Width = 506
     Height = 97
     Lines.Strings = (
       'Memo1')
     TabOrder = 8
+    Visible = False
   end
   object Start: TButton
     Left = 527
@@ -138,10 +139,11 @@ object Main: TMain
     OnClick = StartClick
   end
   object CountRepeatCicleEdit: TEdit
-    Left = 451
-    Top = 8
+    Left = 443
+    Top = 13
     Width = 54
     Height = 23
+    Enabled = False
     TabOrder = 10
     Text = 'CountRepeatCicleEdit'
   end

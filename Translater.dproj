@@ -105,6 +105,10 @@
         <DCCReference Include="uLanguages.pas"/>
         <DCCReference Include="uCodeKey.pas"/>
         <DCCReference Include="uTranslate.pas"/>
+        <DCCReference Include="fmClipInfoForm.pas">
+            <Form>ClipInfoForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

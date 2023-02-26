@@ -6,7 +6,8 @@ uses
   uCodeKey, uLanguages,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
+  fmClipInfoForm;
 
 // Настройка, наименование, языки, разрешение экрана, основной язык канала.
 type
@@ -364,11 +365,11 @@ end;
 
 procedure TMain.TestButtonClick(Sender: TObject);
 var
-  vPath: string;
+  res:word;
 begin
-
-  vPath := GetCurrentDir();
-  ShowMessage(vPath);
+res := ClipInfoForm.ShowModal;
+if res = mrOK then MessageDlg('Диалог принят.', mtInformation, [mbYes], 0);
+if res = mrCancel then MessageDlg('Диалог отменен.', mtInformation, [mbYes], 0);
 end;
 
 procedure TMain.ButtonStep2Click(Sender: TObject);

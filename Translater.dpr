@@ -5,7 +5,8 @@ uses
   MainForm in 'MainForm.pas' {Main},
   uLanguages in 'uLanguages.pas',
   uCodeKey in 'uCodeKey.pas',
-  uTranslate in 'uTranslate.pas';
+  uTranslate in 'uTranslate.pas',
+  fmClipInfoForm in 'fmClipInfoForm.pas' {ClipInfoForm};
 
 {$R *.res}
 
@@ -13,5 +14,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMain, Main);
+  Application.CreateForm(TClipInfoForm, ClipInfoForm);
   Application.Run;
 end.
