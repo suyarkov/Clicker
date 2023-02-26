@@ -50,7 +50,6 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     TestButton2: TButton;
-    Edit2: TEdit;
     TranslateTextMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure MemoClipNameChange(Sender: TObject);
@@ -202,11 +201,11 @@ begin
           end;
 
         7:
-          begin // распознование языка по строке из мемо
+          begin // перевод мемо названия
           end;
 
         8:
-          begin // перевод мемо
+          begin // перевод мемо описание
           end;
 
         9:
@@ -280,12 +279,12 @@ begin
           end;
 
         7:
-          begin // распознование языка по строке из мемо
+          begin // перевод мемо1
             pMemo.Lines.add('7-');
           end;
 
         8:
-          begin // перевод мемо
+          begin // перевод мемо2
             pMemo.Lines.add('8-');
           end;
 
@@ -342,6 +341,7 @@ var
   vLnFrom, LnFor : string;
 begin
   vLnFrom := Profile.MainLanguage;
+  vLnFrom := 'ru'; // пока на время!!!
   LoadKeyboardLayout(StrCopy(Layout, '00000419'), KLF_ACTIVATE);
   Delay(1000);
   vCountCicle := 0;
@@ -412,17 +412,14 @@ begin
             Delay(100);
             vStrFor6 := Clipboard.AsText;
             LnCodeForTranslation := GetLnCodeFromList(vStrFor6, ListLanguages);
-            edit2.Text := LnCodeForTranslation;
             //showmessage('Из буфера обмена ' + LnCodeForTranslation);
           end;
 
         7:
           begin // перевод мемоName и вставка в поле
-            vLnFrom := 'ru'; // для тестов пока с русского
-            vStrFor6 := '';
-            vStrFor6 := StringReplace(MemoClipName.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
-            vStrFor7 := GoogleTranslate(vStrFor6,vLnFrom, LnCodeForTranslation);
-            if Length(vStrFor7) > 100 then
+            vStrFor7 := StringReplace(MemoClipName.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
+            vStrFor7 := GoogleTranslate(vStrFor7,vLnFrom, LnCodeForTranslation);
+            if Length(vStrFor7) > 100 then // в длинну упрячем
               vStrFor7 := Copy(vStrFor7,1,100);
 
             TranslateTextMemo.Text := vStrFor7;
@@ -441,7 +438,23 @@ begin
           end;
 
         8:
-          begin // перевод мемо 2
+          begin // перевод мемоInfo 2
+            TranslateTextMemo.Text := GoogleTranslate(MemoClipInfo.Text,vLnFrom, LnCodeForTranslation);
+            if Length(TranslateTextMemo.Text) > 5000 then // в длинну упрячем
+              TranslateTextMemo.Text := Copy(TranslateTextMemo.Text,1,5000);
+
+            // скопируем из мемо в буфер обена
+            TranslateTextMemo.SelectAll;
+            TranslateTextMemo.CopyToClipboard;
+            //активируем окно вставки текста
+            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            // вставить из буфера в окно
+            keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+            keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
+            keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+            // Отпускание левого Ctrl.
           end;
 
         9:
@@ -471,7 +484,7 @@ end;
 procedure TMain.TestButton2Click(Sender: TObject);
 var ln : string;
 begin
-  ln := edit2.Text;
+  ln := 'ru';
   TranslateTextMemo.Text := GoogleTranslate(MemoClipName.Text,'ru', ln);
 end;
 
@@ -565,6 +578,8 @@ begin
   LabelCountLanguages.Caption := 'Перевод на ' +
     IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' языка';
   LnCodeForTranslation := 'unknow';
+  MemoClipName.OnChange(Sender);
+  MemoClipInfo.OnChange(Sender);
 end;
 
 procedure TMain.MemoClipInfoChange(Sender: TObject);

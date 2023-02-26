@@ -3,7 +3,7 @@ object Main: TMain
   Top = 0
   Caption = 'Main'
   ClientHeight = 467
-  ClientWidth = 657
+  ClientWidth = 627
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,30 +28,30 @@ object Main: TMain
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1082#1083#1080#1087#1072' ('#1085#1077' '#1073#1086#1083#1077#1077' 5000 '#1089#1080#1084#1074#1086#1083#1086#1074')'
   end
   object LabelCountLanguages: TLabel
-    Left = 527
+    Left = 639
     Top = 37
     Width = 118
     Height = 15
     Caption = 'LabelCountLanguages'
   end
   object LabelMainLanguage: TLabel
-    Left = 527
+    Left = 639
     Top = 16
     Width = 107
     Height = 15
     Caption = 'LabelMainLanguage'
   end
   object Label2: TLabel
-    Left = 451
-    Top = 58
+    Left = 475
+    Top = 16
     Width = 34
     Height = 15
     Caption = 'Label2'
   end
   object MemoClipName: TMemo
-    Left = 24
+    Left = 8
     Top = 84
-    Width = 473
+    Width = 609
     Height = 37
     Lines.Strings = (
       'MemoClipName')
@@ -59,12 +59,13 @@ object Main: TMain
     OnChange = MemoClipNameChange
   end
   object MemoClipInfo: TMemo
-    Left = 24
+    Left = 8
     Top = 160
-    Width = 473
+    Width = 609
     Height = 289
     Lines.Strings = (
       'MemoClipInfo')
+    ScrollBars = ssBoth
     TabOrder = 1
     OnChange = MemoClipInfoChange
   end
@@ -85,7 +86,7 @@ object Main: TMain
     Text = 'EditCountInfoLetters'
   end
   object ButtonStep1: TButton
-    Left = 24
+    Left = 8
     Top = 8
     Width = 104
     Height = 37
@@ -94,7 +95,7 @@ object Main: TMain
     OnClick = ButtonStep1Click
   end
   object ButtonStep2: TButton
-    Left = 148
+    Left = 147
     Top = 8
     Width = 126
     Height = 37
@@ -103,7 +104,7 @@ object Main: TMain
     OnClick = ButtonStep2Click
   end
   object ButtonStep3: TButton
-    Left = 296
+    Left = 320
     Top = 8
     Width = 129
     Height = 37
@@ -112,7 +113,7 @@ object Main: TMain
     OnClick = ButtonStep3Click
   end
   object LoadTask: TButton
-    Left = 527
+    Left = 639
     Top = 114
     Width = 75
     Height = 25
@@ -121,16 +122,17 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 16
-    Top = 199
-    Width = 506
+    Left = 639
+    Top = 253
+    Width = 449
     Height = 97
     Lines.Strings = (
       'Memo1')
     TabOrder = 8
+    Visible = False
   end
   object Start: TButton
-    Left = 527
+    Left = 639
     Top = 83
     Width = 75
     Height = 25
@@ -139,7 +141,7 @@ object Main: TMain
     OnClick = StartClick
   end
   object CountRepeatCicleEdit: TEdit
-    Left = 443
+    Left = 531
     Top = 13
     Width = 54
     Height = 23
@@ -148,7 +150,7 @@ object Main: TMain
     Text = 'CountRepeatCicleEdit'
   end
   object TestButton: TButton
-    Left = 527
+    Left = 639
     Top = 159
     Width = 75
     Height = 25
@@ -157,7 +159,7 @@ object Main: TMain
     OnClick = TestButtonClick
   end
   object GetXYMouse: TButton
-    Left = 527
+    Left = 639
     Top = 219
     Width = 75
     Height = 25
@@ -166,7 +168,7 @@ object Main: TMain
     OnClick = GetXYMouseClick
   end
   object XYMouse: TEdit
-    Left = 527
+    Left = 639
     Top = 190
     Width = 75
     Height = 23
@@ -174,7 +176,7 @@ object Main: TMain
     Text = 'XYMouse'
   end
   object TestButton2: TButton
-    Left = 528
+    Left = 640
     Top = 256
     Width = 75
     Height = 25
@@ -182,25 +184,19 @@ object Main: TMain
     TabOrder = 14
     OnClick = TestButton2Click
   end
-  object Edit2: TEdit
-    Left = 24
-    Top = 327
-    Width = 625
-    Height = 23
-    TabOrder = 15
-    Text = 'Edit2'
-  end
   object TranslateTextMemo: TMemo
-    Left = 0
-    Top = 356
+    Left = 639
+    Top = 384
     Width = 657
     Height = 65
     Lines.Strings = (
       'TranslateTextMemo')
-    TabOrder = 16
+    ScrollBars = ssVertical
+    TabOrder = 15
+    Visible = False
   end
   object OpenDialog1: TOpenDialog
-    Left = 448
-    Top = 128
+    Left = 736
+    Top = 96
   end
 end
