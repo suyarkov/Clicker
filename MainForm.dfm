@@ -121,14 +121,13 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 567
-    Top = 296
+    Left = 16
+    Top = 199
     Width = 506
     Height = 97
     Lines.Strings = (
       'Memo1')
     TabOrder = 8
-    Visible = False
   end
   object Start: TButton
     Left = 527
@@ -173,6 +172,32 @@ object Main: TMain
     Height = 23
     TabOrder = 13
     Text = 'XYMouse'
+  end
+  object TestButton2: TButton
+    Left = 528
+    Top = 256
+    Width = 75
+    Height = 25
+    Caption = 'TestButton2'
+    TabOrder = 14
+    OnClick = TestButton2Click
+  end
+  object Edit2: TEdit
+    Left = 24
+    Top = 327
+    Width = 625
+    Height = 23
+    TabOrder = 15
+    Text = 'Edit2'
+  end
+  object TranslateTextMemo: TMemo
+    Left = 0
+    Top = 356
+    Width = 657
+    Height = 65
+    Lines.Strings = (
+      'TranslateTextMemo')
+    TabOrder = 16
   end
   object OpenDialog1: TOpenDialog
     Left = 448
