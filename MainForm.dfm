@@ -109,6 +109,7 @@ object Main: TMain
     Height = 37
     Caption = #1055#1077#1088#1077#1074#1086#1076' '#1086#1087#1080#1089#1072#1085#1080#1103
     TabOrder = 6
+    OnClick = ButtonStep3Click
   end
   object LoadTask: TButton
     Left = 527
@@ -159,7 +160,7 @@ object Main: TMain
   object GetXYMouse: TButton
     Left = 527
     Top = 219
-    Width = 88
+    Width = 75
     Height = 25
     Caption = 'GetXYMouse'
     TabOrder = 12
@@ -168,7 +169,7 @@ object Main: TMain
   object XYMouse: TEdit
     Left = 527
     Top = 190
-    Width = 88
+    Width = 75
     Height = 23
     TabOrder = 13
     Text = 'XYMouse'

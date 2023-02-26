@@ -58,11 +58,11 @@ type
     procedure ButtonStep1Click(Sender: TObject);
     procedure GetXYMouseClick(Sender: TObject);
     procedure ButtonStep2Click(Sender: TObject);
+    procedure ButtonStep3Click(Sender: TObject);
   private
     { Private declarations }
     Profile: TProfile;  // настройка профиля для разных расширений, разных каналов.
     ListLanguages: TListLanguages; // список всех возможных языков в системе
-    vTmpX, vTmpY: integer;  // координаты мышки для их устноавки
     Rec: Array [1 .. 1000] of TRecord; // записи для действий, создаются по файлу
     CountRec: integer; // количество действий
     CountRepeatCicle: integer; // количество циклов действий
@@ -185,9 +185,26 @@ begin
           end;
 
         5:
-          begin // текст
+          begin // текст, нажатие по нему клавиш
             vStrPart := Copy(vStr, vPos + 1, Length(vStr) - (vPos));
             vRecord.StrPar1 := vStrPart; // сдвиг с - и без него
+          end;
+
+        6:
+          begin // двойной клик, и копирование в буфер обмена выделенного
+                //и далее из буфера обмена в мемо
+          end;
+
+        7:
+          begin //распознование языка по строке из мемо
+          end;
+
+        8:
+          begin //перевод мемо
+          end;
+
+        9:
+          begin //вставка из мемо в буфер, и далее в позицию
           end;
 
         10:
@@ -208,7 +225,6 @@ procedure TMain.RecToMemo(pRec: Array of TRecord; pCountRec: integer;
 var
   i: integer;
   vStr: string;
-  vRecord: TRecord;
 begin
   pMemo.Clear;
   if pCountRec = null then
@@ -247,10 +263,28 @@ begin
           end;
 
         5:
-          begin // текст
+          begin // текст, нажатие по нему клавиш
             vStr := '5-' + pRec[i].StrPar1;
             pMemo.Lines.add(vStr);
           end;
+
+        6:
+          begin // двойной клик, и копирование в буфер обмена выделенного
+                //и далее из буфера обмена в мемо
+          end;
+
+        7:
+          begin //распознование языка по строке из мемо
+          end;
+
+        8:
+          begin //перевод мемо
+          end;
+
+        9:
+          begin //вставка из мемо в буфер, и далее в позицию
+          end;
+
       end;
     end;
   end;
@@ -327,7 +361,7 @@ begin
           end;
 
         5:
-          begin // набор текста
+          begin // набор текста , нажатие по нему клавиш
             Sleep(500);
             Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Cardinal(-12000), 0);
             // Delay(500);
@@ -342,6 +376,23 @@ begin
             keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0); // Отпускание 's'.
             // Delay( 1000);
 
+          end;
+
+        6:
+          begin // двойной клик, и копирование в буфер обмена выделенного
+                //и далее из буфера обмена в мемо
+          end;
+
+        7:
+          begin //распознование языка по строке из мемо
+          end;
+
+        8:
+          begin //перевод мемо
+          end;
+
+        9:
+          begin //вставка из мемо в буфер, и далее в позицию
           end;
       end;
     end;
@@ -393,6 +444,28 @@ begin
   else
     ShowMessage(vFullNameFile + ' не существует');
 
+end;
+
+procedure TMain.ButtonStep3Click(Sender: TObject);
+const
+  cNameFile: string = 'Step3.cls';
+var
+  vPath: string;
+  vFullNameFile: string;
+begin
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cNameFile;
+  // Теперь проверяем существует ли файл
+  if FileExists(vFullNameFile) then
+  begin
+    Memo1.Lines.LoadFromFile(vFullNameFile);
+    CountRec := 0;
+    MemoToRec(Memo1, Rec, CountRec);
+    //ShowMessage(vFullNameFile + ' загружен!');
+    Start.Click();
+  end
+  else
+    ShowMessage(vFullNameFile + ' не существует');
 end;
 
 procedure TMain.ButtonStep1Click(Sender: TObject);
