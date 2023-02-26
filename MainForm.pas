@@ -43,6 +43,7 @@ type
     Start: TButton;
     Label2: TLabel;
     Edit1: TEdit;
+    StringGrid1: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure MemoClipNameChange(Sender: TObject);
     procedure MemoClipInfoChange(Sender: TObject);
@@ -57,7 +58,6 @@ type
     i: integer;
     Rec: Array [1..1000] of TRecord;
     CountRec : integer;
-    StringGrid1 : TStringGrid;
 
     procedure RecordFree (var pRecord : TRecord);
     procedure RecFree (var pRec : Array of TRecord; var pCountRec :Integer);

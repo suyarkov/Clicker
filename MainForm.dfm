@@ -117,9 +117,9 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 640
-    Top = 328
-    Width = 105
+    Left = 8
+    Top = 288
+    Width = 506
     Height = 97
     Lines.Strings = (
       'Memo1')
@@ -149,6 +149,19 @@ object Main: TMain
     Height = 23
     TabOrder = 11
     Text = 'Edit1'
+  end
+  object StringGrid1: TStringGrid
+    Left = 680
+    Top = 31
+    Width = 65
+    Height = 66
+    Color = clBtnFace
+    DefaultColWidth = 285
+    FixedCols = 0
+    RowCount = 1
+    FixedRows = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goFixedRowDefAlign]
+    TabOrder = 12
   end
   object OpenDialog1: TOpenDialog
     Left = 528
