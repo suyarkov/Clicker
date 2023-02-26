@@ -51,6 +51,7 @@ type
     XYMouse: TEdit;
     TestButton2: TButton;
     TranslateTextMemo: TMemo;
+    MemoError: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure MemoClipNameChange(Sender: TObject);
     procedure MemoClipInfoChange(Sender: TObject);
@@ -67,10 +68,11 @@ type
     Profile: TProfile;
     // настройка профиля для разных расширений, разных каналов.
     ListLanguages: TListLanguages; // список всех возможных языков в системе
-    Rec: Array [1 .. 1000] of TRecord;// записи для действий, создаются по файлу
+    Rec: Array [1 .. 1000] of TRecord;
+    // записи для действий, создаются по файлу
     CountRec: integer; // количество действий
     CountRepeatCicle: integer; // количество циклов действий
-    LnCodeForTranslation : string; // код языка на который будут перевод
+    LnCodeForTranslation: string; // код языка на который будут перевод
 
     procedure RecordFree(var pRecord: TRecord);
     procedure RecFree(var pRec: Array of TRecord; var pCountRec: integer);
@@ -275,7 +277,7 @@ begin
 
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного
-            pMemo.Lines.add('6-');  // и далее из буфера обмена в мемо
+            pMemo.Lines.add('6-'); // и далее из буфера обмена в мемо
           end;
 
         7:
@@ -336,16 +338,17 @@ var
   Layout: array [0 .. KL_NAMELENGTH] of char;
   vKey: char;
   vCountCicle: integer;
-  vStrFor6 : string;
-  vStrFor7 : string;
-  vLnFrom, LnFor : string;
+  vStrFor6: string;
+  vStrFor7: string;
+  vIntControl: integer;
+  vLnFrom, LnFor: string;
 begin
   vLnFrom := Profile.MainLanguage;
   vLnFrom := 'ru'; // пока на время!!!
   LoadKeyboardLayout(StrCopy(Layout, '00000419'), KLF_ACTIVATE);
   Delay(1000);
   vCountCicle := 0;
-
+  vIntControl := 0;
   repeat
     vCountCicle := vCountCicle + 1;
     vX := 0;
@@ -375,7 +378,7 @@ begin
 
         4:
           begin // скрол
-            Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Rec[i].IntPar1, 0);
+            Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Cardinal(-Rec[i].IntPar1), 0);
           end;
 
         5:
@@ -399,11 +402,14 @@ begin
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного и в мемо
             // и далее из буфера обмена в мемо
+            vIntControl := 0;
+            Clipboard.AsText:=' ';
+            vStrFor7 := Clipboard.AsText;
             Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
             Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
             Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            //Delay(150);
+            // Delay(150);
             keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
             keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
             keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
@@ -411,50 +417,65 @@ begin
             // Отпускание левого Ctrl.
             Delay(100);
             vStrFor6 := Clipboard.AsText;
-            LnCodeForTranslation := GetLnCodeFromList(vStrFor6, ListLanguages);
-            //showmessage('Из буфера обмена ' + LnCodeForTranslation);
+            if vStrFor6 <> vStrFor7 then
+            begin
+              vIntControl := 1;
+              Label2.Caption := vStrFor6;
+              LnCodeForTranslation := GetLnCodeFromList(vStrFor6, ListLanguages);
+            end;
+            // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
+            MemoError.Text :=  MemoError.Text + ' Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation;
           end;
 
         7:
           begin // перевод мемоName и вставка в поле
-            vStrFor7 := StringReplace(MemoClipName.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
-            vStrFor7 := GoogleTranslate(vStrFor7,vLnFrom, LnCodeForTranslation);
-            if Length(vStrFor7) > 100 then // в длинну упрячем
-              vStrFor7 := Copy(vStrFor7,1,100);
+            if vIntControl > 0 then
+            begin
+              vStrFor7 := StringReplace(MemoClipName.Text, #13, '',
+                [rfReplaceAll, rfIgnoreCase]);
+              vStrFor7 := GoogleTranslate(vStrFor7, vLnFrom,
+                LnCodeForTranslation);
+              if Length(vStrFor7) > 100 then // в длинну упрячем
+                vStrFor7 := Copy(vStrFor7, 1, 100);
 
-            TranslateTextMemo.Text := vStrFor7;
-            // скопируем из мемо в буфер обена
-            TranslateTextMemo.SelectAll;
-            TranslateTextMemo.CopyToClipboard;
-            //активируем окно вставки текста
-            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            // вставить из буфера в окно
-            keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-            keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
-            keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            // Отпускание левого Ctrl.
+              TranslateTextMemo.Text := vStrFor7;
+              // скопируем из мемо в буфер обена
+              TranslateTextMemo.SelectAll;
+              TranslateTextMemo.CopyToClipboard;
+              // активируем окно вставки текста
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+              // вставить из буфера в окно
+              keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+              keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
+              keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+              keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+              // Отпускание левого Ctrl.
+            end;
           end;
 
         8:
           begin // перевод мемоInfo 2
-            TranslateTextMemo.Text := GoogleTranslate(MemoClipInfo.Text,vLnFrom, LnCodeForTranslation);
-            if Length(TranslateTextMemo.Text) > 5000 then // в длинну упрячем
-              TranslateTextMemo.Text := Copy(TranslateTextMemo.Text,1,5000);
+            if vIntControl > 0 then
+            begin
+              TranslateTextMemo.Text := GoogleTranslate(MemoClipInfo.Text,
+                vLnFrom, LnCodeForTranslation);
+              if Length(TranslateTextMemo.Text) > 5000 then // в длинну упрячем
+                TranslateTextMemo.Text := Copy(TranslateTextMemo.Text, 1, 5000);
 
-            // скопируем из мемо в буфер обена
-            TranslateTextMemo.SelectAll;
-            TranslateTextMemo.CopyToClipboard;
-            //активируем окно вставки текста
-            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            // вставить из буфера в окно
-            keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-            keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
-            keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            // Отпускание левого Ctrl.
+              // скопируем из мемо в буфер обена
+              TranslateTextMemo.SelectAll;
+              TranslateTextMemo.CopyToClipboard;
+              // активируем окно вставки текста
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+              // вставить из буфера в окно
+              keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+              keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
+              keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+              keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+              // Отпускание левого Ctrl.
+            end;
           end;
 
         9:
@@ -471,10 +492,10 @@ begin
       Delay(2000);
       vX2 := MyMouse.CursorPos.x;
       vY2 := MyMouse.CursorPos.y;
-      Label2.Caption := IntToStr(vX) + '=' + IntToStr(vX2) + ':' + IntToStr(vY)
-        + '=' + IntToStr(vY2);
+      //Label2.Caption := IntToStr(vX) + '=' + IntToStr(vX2) + ':' + IntToStr(vY)
+      //  + '=' + IntToStr(vY2);
     end;
-
+    Label2.Caption := IntToStr(vCountCicle);
   until (vX2 <> vX) or (vY2 <> vY) or (vCountCicle >= CountRepeatCicle);
 
   showmessage('Завершено ' + IntToStr(vCountCicle) + ' = ' +
@@ -482,10 +503,11 @@ begin
 end;
 
 procedure TMain.TestButton2Click(Sender: TObject);
-var ln : string;
+var
+  ln: string;
 begin
   ln := 'ru';
-  TranslateTextMemo.Text := GoogleTranslate(MemoClipName.Text,'ru', ln);
+  TranslateTextMemo.Text := GoogleTranslate(MemoClipName.Text, 'ru', ln);
 end;
 
 procedure TMain.TestButtonClick(Sender: TObject);
@@ -537,7 +559,7 @@ begin
     Memo1.Lines.LoadFromFile(vFullNameFile);
     CountRec := 0;
     MemoToRec(Memo1, Rec, CountRec);
-    //ShowMessage(vFullNameFile + ' загружен!');
+    // ShowMessage(vFullNameFile + ' загружен!');
     Start.Click();
   end
   else

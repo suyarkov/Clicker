@@ -195,6 +195,16 @@ object Main: TMain
     TabOrder = 15
     Visible = False
   end
+  object MemoError: TMemo
+    Left = 392
+    Top = 224
+    Width = 289
+    Height = 177
+    Lines.Strings = (
+      'MemoError')
+    TabOrder = 16
+    Visible = False
+  end
   object OpenDialog1: TOpenDialog
     Left = 736
     Top = 96

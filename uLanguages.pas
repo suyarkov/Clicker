@@ -343,7 +343,7 @@ begin
       break;
     end;
     inc(i);
-  until i> 1000 or vList[i].Id = null;
+  until (i> 2000) or (vList[i].LnCode = '');
 end;
 
 function GetLnCodeFromList(NameRead: String; ListLanguages : TListLanguages): String;
@@ -360,7 +360,7 @@ begin
       break;
     end;
     inc(i);
-  until i> 1000 or ListLanguages[i].Id = null;
+  until (i >= 200) or (ListLanguages[i].LnCode = '');
 end;
 
 end.
