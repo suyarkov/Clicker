@@ -9,10 +9,14 @@ uses
 
 type
   TClipInfoForm = class(TForm)
-    MemoClipName: TMemo;
     MemoClipInfo: TMemo;
     ButtonOk: TButton;
+    EditClipName: TEdit;
+    Label1: TLabel;
+    LabelClipInfo: TLabel;
+    ButtonCancel: TButton;
     procedure ButtonOkClick(Sender: TObject);
+    procedure ButtonCancelClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -25,6 +29,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TClipInfoForm.ButtonCancelClick(Sender: TObject);
+begin
+  ModalResult := mrCancel;
+end;
 
 procedure TClipInfoForm.ButtonOkClick(Sender: TObject);
 begin

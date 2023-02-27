@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.699,D:\DelphiTest\TranslateClicker\uMain.pas=D:\DelphiTest\TranslateClicker\Translate.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.898,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\DelphiTest\TranslateClicker\Translater.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.053,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\DelphiTest\TranslateClicker\uMain.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.768,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.699,D:\DelphiTest\TranslateClicker\uMain.dfm=D:\DelphiTest\TranslateClicker\Translate.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.633,=D:\GitClicker\Clicker\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.854,D:\DelphiTest\TranslateClicker\uCodeKey.pas=D:\DelphiTest\TranslateClicker\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.133,D:\GitClicker\Clicker\fmClipInfoForm.dfm=D:\GitClicker\Clicker\uClipInfoForm.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.298,D:\GitClicker\Clicker\uClipInfoForm.pas=D:\GitClicker\Clicker\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.053,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\DelphiTest\TranslateClicker\uMain.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.133,D:\GitClicker\Clicker\fmClipInfoForm.pas=D:\GitClicker\Clicker\uClipInfoForm.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.898,D:\DelphiTest\TranslateClicker\Translate.pas=D:\DelphiTest\TranslateClicker\MainForm.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.298,D:\GitClicker\Clicker\uClipInfoForm.dfm=D:\GitClicker\Clicker\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.365,D:\DelphiTest\TranslateClicker\uLanguages.pas=D:\DelphiTest\TranslateClicker\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.298,D:\GitClicker\Clicker\Unit1.dfm=D:\GitClicker\Clicker\uClipInfoForm.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.599,=D:\DelphiTest\TranslateClicker\uTranslate.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.134,=D:\DelphiTest\TranslateClicker\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.768,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.898,D:\DelphiTest\TranslateClicker\MainForm.pas=D:\DelphiTest\TranslateClicker\Translate.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.053,D:\DelphiTest\TranslateClicker\uMain.pas=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.298,D:\GitClicker\Clicker\Unit1.pas=D:\GitClicker\Clicker\uClipInfoForm.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.633,=D:\GitClicker\Clicker\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.133,D:\GitClicker\Clicker\uClipInfoForm.pas=D:\GitClicker\Clicker\fmClipInfoForm.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.053,D:\DelphiTest\TranslateClicker\uMain.dfm=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.898,D:\DelphiTest\TranslateClicker\Translater.dproj=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.699,D:\DelphiTest\TranslateClicker\Translate.pas=D:\DelphiTest\TranslateClicker\uMain.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.133,D:\GitClicker\Clicker\uClipInfoForm.dfm=D:\GitClicker\Clicker\fmClipInfoForm.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.898,D:\DelphiTest\TranslateClicker\MainForm.dfm=D:\DelphiTest\TranslateClicker\Translate.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.699,D:\DelphiTest\TranslateClicker\Translate.dfm=D:\DelphiTest\TranslateClicker\uMain.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.605,=D:\DelphiTest\TranslateClicker\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.898,D:\DelphiTest\TranslateClicker\Translate.dfm=D:\DelphiTest\TranslateClicker\MainForm.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.134,=D:\DelphiTest\TranslateClicker\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.365,D:\DelphiTest\TranslateClicker\Unit1.pas=D:\DelphiTest\TranslateClicker\uLanguages.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.854,D:\DelphiTest\TranslateClicker\Unit1.pas=D:\DelphiTest\TranslateClicker\uCodeKey.pas</Transaction>
   </Transactions>
 </BorlandProject>

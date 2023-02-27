@@ -3,7 +3,7 @@ object Main: TMain
   Top = 0
   Caption = 'Main'
   ClientHeight = 467
-  ClientWidth = 627
+  ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -48,25 +48,15 @@ object Main: TMain
     Height = 15
     Caption = 'Label2'
   end
-  object MemoClipName: TMemo
-    Left = 8
-    Top = 84
-    Width = 609
-    Height = 37
-    Lines.Strings = (
-      'MemoClipName')
-    TabOrder = 0
-    OnChange = MemoClipNameChange
-  end
   object MemoClipInfo: TMemo
     Left = 8
     Top = 160
-    Width = 609
+    Width = 756
     Height = 289
     Lines.Strings = (
       'MemoClipInfo')
     ScrollBars = ssBoth
-    TabOrder = 1
+    TabOrder = 0
     OnChange = MemoClipInfoChange
   end
   object EditCountNameLetters: TEdit
@@ -74,7 +64,7 @@ object Main: TMain
     Top = 55
     Width = 50
     Height = 23
-    TabOrder = 2
+    TabOrder = 1
     Text = 'EditCountNameLetters'
   end
   object EditCountInfoLetters: TEdit
@@ -82,7 +72,7 @@ object Main: TMain
     Top = 131
     Width = 49
     Height = 23
-    TabOrder = 3
+    TabOrder = 2
     Text = 'EditCountInfoLetters'
   end
   object ButtonStep1: TButton
@@ -91,7 +81,7 @@ object Main: TMain
     Width = 104
     Height = 37
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1103#1079#1099#1082#1080
-    TabOrder = 4
+    TabOrder = 3
     OnClick = ButtonStep1Click
   end
   object ButtonStep2: TButton
@@ -100,7 +90,7 @@ object Main: TMain
     Width = 126
     Height = 37
     Caption = #1055#1077#1088#1077#1074#1086#1076' '#1089#1091#1073#1090#1080#1090#1088#1086#1074
-    TabOrder = 5
+    TabOrder = 4
     OnClick = ButtonStep2Click
   end
   object ButtonStep3: TButton
@@ -109,7 +99,7 @@ object Main: TMain
     Width = 129
     Height = 37
     Caption = #1055#1077#1088#1077#1074#1086#1076' '#1086#1087#1080#1089#1072#1085#1080#1103
-    TabOrder = 6
+    TabOrder = 5
     OnClick = ButtonStep3Click
   end
   object LoadTask: TButton
@@ -118,7 +108,7 @@ object Main: TMain
     Width = 75
     Height = 25
     Caption = 'LoadTask'
-    TabOrder = 7
+    TabOrder = 6
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
@@ -128,7 +118,7 @@ object Main: TMain
     Height = 97
     Lines.Strings = (
       'Memo1')
-    TabOrder = 8
+    TabOrder = 7
     Visible = False
   end
   object Start: TButton
@@ -137,7 +127,7 @@ object Main: TMain
     Width = 75
     Height = 25
     Caption = 'Start'
-    TabOrder = 9
+    TabOrder = 8
     OnClick = StartClick
   end
   object CountRepeatCicleEdit: TEdit
@@ -146,7 +136,7 @@ object Main: TMain
     Width = 54
     Height = 23
     Enabled = False
-    TabOrder = 10
+    TabOrder = 9
     Text = 'CountRepeatCicleEdit'
   end
   object TestButton: TButton
@@ -155,7 +145,7 @@ object Main: TMain
     Width = 75
     Height = 25
     Caption = 'TestButton'
-    TabOrder = 11
+    TabOrder = 10
     OnClick = TestButtonClick
   end
   object GetXYMouse: TButton
@@ -164,7 +154,7 @@ object Main: TMain
     Width = 75
     Height = 25
     Caption = 'GetXYMouse'
-    TabOrder = 12
+    TabOrder = 11
     OnClick = GetXYMouseClick
   end
   object XYMouse: TEdit
@@ -172,7 +162,7 @@ object Main: TMain
     Top = 190
     Width = 75
     Height = 23
-    TabOrder = 13
+    TabOrder = 12
     Text = 'XYMouse'
   end
   object TestButton2: TButton
@@ -181,7 +171,7 @@ object Main: TMain
     Width = 75
     Height = 25
     Caption = 'TestButton2'
-    TabOrder = 14
+    TabOrder = 13
     OnClick = TestButton2Click
   end
   object TranslateTextMemo: TMemo
@@ -192,18 +182,26 @@ object Main: TMain
     Lines.Strings = (
       'TranslateTextMemo')
     ScrollBars = ssVertical
-    TabOrder = 15
+    TabOrder = 14
     Visible = False
   end
   object MemoError: TMemo
-    Left = 392
-    Top = 224
+    Left = 345
+    Top = 219
     Width = 289
     Height = 177
     Lines.Strings = (
       'MemoError')
-    TabOrder = 16
+    TabOrder = 15
     Visible = False
+  end
+  object EditClipName: TEdit
+    Left = 16
+    Top = 88
+    Width = 748
+    Height = 23
+    TabOrder = 16
+    Text = 'EditClipName'
   end
   object OpenDialog1: TOpenDialog
     Left = 736

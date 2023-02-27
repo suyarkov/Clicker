@@ -29,8 +29,6 @@ type
 
 type
   TMain = class(TForm)
-    MemoClipName: TMemo;
-    MemoClipInfo: TMemo;
     LabelClipName: TLabel;
     LabelClipInfo: TLabel;
     EditCountNameLetters: TEdit;
@@ -52,6 +50,8 @@ type
     TestButton2: TButton;
     TranslateTextMemo: TMemo;
     MemoError: TMemo;
+    EditClipName: TEdit;
+    MemoClipInfo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure MemoClipNameChange(Sender: TObject);
     procedure MemoClipInfoChange(Sender: TObject);
@@ -403,7 +403,7 @@ begin
           begin // двойной клик, и копирование в буфер обмена выделенного и в мемо
             // и далее из буфера обмена в мемо
             vIntControl := 0;
-            Clipboard.AsText:=' ';
+            Clipboard.AsText := ' ';
             vStrFor7 := Clipboard.AsText;
             Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
             Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -421,17 +421,19 @@ begin
             begin
               vIntControl := 1;
               Label2.Caption := vStrFor6;
-              LnCodeForTranslation := GetLnCodeFromList(vStrFor6, ListLanguages);
+              LnCodeForTranslation := GetLnCodeFromList(vStrFor6,
+                ListLanguages);
             end;
             // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
-            MemoError.Text :=  MemoError.Text + ' Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation;
+            MemoError.Text := MemoError.Text + ' Из буфера обмена' + vStrFor6 +
+              ' ' + LnCodeForTranslation;
           end;
 
         7:
           begin // перевод мемоName и вставка в поле
             if vIntControl > 0 then
             begin
-              vStrFor7 := StringReplace(MemoClipName.Text, #13, '',
+              vStrFor7 := StringReplace(EditClipName.Text, #13, '',
                 [rfReplaceAll, rfIgnoreCase]);
               vStrFor7 := GoogleTranslate(vStrFor7, vLnFrom,
                 LnCodeForTranslation);
@@ -492,8 +494,8 @@ begin
       Delay(2000);
       vX2 := MyMouse.CursorPos.x;
       vY2 := MyMouse.CursorPos.y;
-      //Label2.Caption := IntToStr(vX) + '=' + IntToStr(vX2) + ':' + IntToStr(vY)
-      //  + '=' + IntToStr(vY2);
+      // Label2.Caption := IntToStr(vX) + '=' + IntToStr(vX2) + ':' + IntToStr(vY)
+      // + '=' + IntToStr(vY2);
     end;
     Label2.Caption := IntToStr(vCountCicle);
   until (vX2 <> vX) or (vY2 <> vY) or (vCountCicle >= CountRepeatCicle);
@@ -507,7 +509,7 @@ var
   ln: string;
 begin
   ln := 'ru';
-  TranslateTextMemo.Text := GoogleTranslate(MemoClipName.Text, 'ru', ln);
+  TranslateTextMemo.Text := GoogleTranslate(EditClipName.Text, 'ru', ln);
 end;
 
 procedure TMain.TestButtonClick(Sender: TObject);
@@ -547,23 +549,60 @@ end;
 procedure TMain.ButtonStep3Click(Sender: TObject);
 const
   cNameFile: string = 'Step3.cls';
+  cFileWithNameClip: string = 'NameClip.cls';
+  cFileWithInfoClip: string = 'InfoClip.cls';
 var
+  resultForm: word;
   vPath: string;
   vFullNameFile: string;
+
 begin
+  // зачитываем значение форм из файла
   vPath := GetCurrentDir();
-  vFullNameFile := vPath + '/' + cNameFile;
-  // Теперь проверяем существует ли файл
+  vFullNameFile := vPath + '/' + cFileWithNameClip;
   if FileExists(vFullNameFile) then
+    begin
+      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);
+      EditClipName.Text := MemoClipInfo.Lines.Strings[0];
+      MemoClipInfo.Text := '';
+      // ShowMessage(vFullNameFile + ' загружен!');
+    end
+    else
+      EditClipName.Text := '';
+
+  vFullNameFile := vPath + '/' + cFileWithInfoClip;
+  if FileExists(vFullNameFile) then
+    begin
+      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);;
+      // ShowMessage(vFullNameFile + ' загружен!');
+    end
+    else
+      MemoClipInfo.Text := '';
+
+    ClipInfoForm.EditClipName.Text := EditClipName.Text;
+    ClipInfoForm.MemoClipInfo.Text := MemoClipInfo.Text;
+
+  resultForm := ClipInfoForm.ShowModal;
+  if resultForm = mrOK then
   begin
-    Memo1.Lines.LoadFromFile(vFullNameFile);
-    CountRec := 0;
-    MemoToRec(Memo1, Rec, CountRec);
-    // ShowMessage(vFullNameFile + ' загружен!');
-    Start.Click();
+    EditClipName.Text :=  ClipInfoForm.EditClipName.Text;
+    MemoClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
+
+    vFullNameFile := vPath + '/' + cNameFile;
+    // Теперь проверяем существует ли файл
+    if FileExists(vFullNameFile) then
+    begin
+      Memo1.Lines.LoadFromFile(vFullNameFile);
+      CountRec := 0;
+      MemoToRec(Memo1, Rec, CountRec);
+      // ShowMessage(vFullNameFile + ' загружен!');
+      Start.Click();
+    end
+    else
+      showmessage(vFullNameFile + ' не существует');
   end
   else
-    showmessage(vFullNameFile + ' не существует');
+    MessageDlg('Действие отменено.', mtInformation, [mbYes], 0);
 end;
 
 procedure TMain.ButtonStep1Click(Sender: TObject);
@@ -600,7 +639,7 @@ begin
   LabelCountLanguages.Caption := 'Перевод на ' +
     IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' языка';
   LnCodeForTranslation := 'unknow';
-  MemoClipName.OnChange(Sender);
+  EditClipName.OnChange(Sender);
   MemoClipInfo.OnChange(Sender);
 end;
 
@@ -623,12 +662,7 @@ var
   countLetters: integer;
   i: integer;
 begin
-  countLetters := 0;
-  for i := 0 To MemoClipName.Lines.Count - 1 Do
-  begin
-    countLetters := countLetters + Length(MemoClipName.Lines.Strings[i]);
-  end;
-
+  countLetters := countLetters + Length(EditClipName.Text);
   EditCountNameLetters.Text := IntToStr(countLetters);
 end;
 
