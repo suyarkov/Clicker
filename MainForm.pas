@@ -573,20 +573,26 @@ begin
   vFullNameFile := vPath + '/' + cFileWithInfoClip;
   if FileExists(vFullNameFile) then
     begin
-      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);;
+      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);
       // ShowMessage(vFullNameFile + ' загружен!');
     end
     else
       MemoClipInfo.Text := '';
 
-    ClipInfoForm.EditClipName.Text := EditClipName.Text;
-    ClipInfoForm.MemoClipInfo.Text := MemoClipInfo.Text;
+ //   ClipInfoForm.EditClipName.Text := EditClipName.Text;
+ //   ClipInfoForm.MemoClipInfo.Text := MemoClipInfo.Text;
 
   resultForm := ClipInfoForm.ShowModal;
   if resultForm = mrOK then
   begin
-    EditClipName.Text :=  ClipInfoForm.EditClipName.Text;
-    MemoClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
+   // EditClipName.Text :=  ClipInfoForm.EditClipName.Text;
+   // MemoClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
+    // сохранение описани€ в файл
+    MemoClipInfo.Lines.SaveToFile(vFullNameFile);
+    // сохранение наименовани€ в файл
+    vFullNameFile := vPath + '/' + cFileWithNameClip;
+    MemoClipInfo.Text := MemoClipInfo.Text;
+    MemoClipInfo.Lines.SaveToFile(vFullNameFile);
 
     vFullNameFile := vPath + '/' + cNameFile;
     // “еперь провер€ем существует ли файл
@@ -596,7 +602,7 @@ begin
       CountRec := 0;
       MemoToRec(Memo1, Rec, CountRec);
       // ShowMessage(vFullNameFile + ' загружен!');
-      Start.Click();
+      //Start.Click(); //**************************************запуск выполнени€
     end
     else
       showmessage(vFullNameFile + ' не существует');
