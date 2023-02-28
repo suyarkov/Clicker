@@ -15,8 +15,14 @@ type
     Label1: TLabel;
     LabelClipInfo: TLabel;
     ButtonCancel: TButton;
+    EditCountNameLetters: TEdit;
+    EditCountInfoLetters: TEdit;
+    LanguageComboBox: TComboBox;
+    Label2: TLabel;
     procedure ButtonOkClick(Sender: TObject);
     procedure ButtonCancelClick(Sender: TObject);
+    procedure EditClipNameChange(Sender: TObject);
+    procedure MemoClipInfoChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,6 +44,31 @@ end;
 procedure TClipInfoForm.ButtonOkClick(Sender: TObject);
 begin
   ModalResult := mrOk;
+end;
+
+procedure TClipInfoForm.EditClipNameChange(Sender: TObject);
+var
+  countLetters: integer;
+  i: integer;
+begin
+  countLetters := Length(EditClipName.Text);
+  EditCountNameLetters.Text := IntToStr(countLetters);
+
+end;
+
+procedure TClipInfoForm.MemoClipInfoChange(Sender: TObject);
+var
+  countLetters: integer;
+  i: integer;
+begin
+  countLetters := 0;
+  for i := 0 To MemoClipInfo.Lines.Count - 1 Do
+  begin
+    countLetters := countLetters + Length(MemoClipInfo.Lines.Strings[i]);
+  end;
+
+  EditCountInfoLetters.Text := IntToStr(countLetters);
+
 end;
 
 end.

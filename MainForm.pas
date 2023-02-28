@@ -29,10 +29,6 @@ type
 
 type
   TMain = class(TForm)
-    LabelClipName: TLabel;
-    LabelClipInfo: TLabel;
-    EditCountNameLetters: TEdit;
-    EditCountInfoLetters: TEdit;
     ButtonStep1: TButton;
     ButtonStep2: TButton;
     ButtonStep3: TButton;
@@ -48,13 +44,9 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     TestButton2: TButton;
-    TranslateTextMemo: TMemo;
     MemoError: TMemo;
-    EditClipName: TEdit;
-    MemoClipInfo: TMemo;
+    TranslateTextMemo: TMemo;
     procedure FormCreate(Sender: TObject);
-    procedure MemoClipNameChange(Sender: TObject);
-    procedure MemoClipInfoChange(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
     procedure TestButtonClick(Sender: TObject);
@@ -63,6 +55,7 @@ type
     procedure ButtonStep2Click(Sender: TObject);
     procedure ButtonStep3Click(Sender: TObject);
     procedure TestButton2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     Profile: TProfile;
@@ -73,7 +66,9 @@ type
     CountRec: integer; // количество действий
     CountRepeatCicle: integer; // количество циклов действий
     LnCodeForTranslation: string; // код языка на который будут перевод
-
+    ClipInfo: TStringList;
+    ClipName: string;
+    TranslateText: TStringList; // Tstrings;
     procedure RecordFree(var pRecord: TRecord);
     procedure RecFree(var pRec: Array of TRecord; var pCountRec: integer);
 
@@ -430,12 +425,10 @@ begin
           end;
 
         7:
-          begin // перевод мемоName и вставка в поле
+          begin // перевод ClipName и вставка в поле
             if vIntControl > 0 then
             begin
-              vStrFor7 := StringReplace(EditClipName.Text, #13, '',
-                [rfReplaceAll, rfIgnoreCase]);
-              vStrFor7 := GoogleTranslate(vStrFor7, vLnFrom,
+              vStrFor7 := GoogleTranslate(ClipName, vLnFrom,
                 LnCodeForTranslation);
               if Length(vStrFor7) > 100 then // в длинну упрячем
                 vStrFor7 := Copy(vStrFor7, 1, 100);
@@ -460,8 +453,8 @@ begin
           begin // перевод мемоInfo 2
             if vIntControl > 0 then
             begin
-              TranslateTextMemo.Text := GoogleTranslate(MemoClipInfo.Text,
-                vLnFrom, LnCodeForTranslation);
+              TranslateTextMemo.Text := GoogleTranslate(ClipInfo.Text, vLnFrom,
+                LnCodeForTranslation);
               if Length(TranslateTextMemo.Text) > 5000 then // в длинну упрячем
                 TranslateTextMemo.Text := Copy(TranslateTextMemo.Text, 1, 5000);
 
@@ -509,7 +502,7 @@ var
   ln: string;
 begin
   ln := 'ru';
-  TranslateTextMemo.Text := GoogleTranslate(EditClipName.Text, 'ru', ln);
+  TranslateText.Text := GoogleTranslate(ClipName, 'ru', ln);
 end;
 
 procedure TMain.TestButtonClick(Sender: TObject);
@@ -555,45 +548,73 @@ var
   resultForm: word;
   vPath: string;
   vFullNameFile: string;
+  i: integer;
+  vNumberLanguage: integer;
 
 begin
+  vNumberLanguage := 0;
+  // наполняем box значениями
+  for i := 1 to 1000 do
+  begin
+    // пустые уже не добавляем
+    if ListLanguages[i].LnCode = '' then
+      break;
+
+    ClipInfoForm.LanguageComboBox.Items.add(ListLanguages[i].LnCode + ' | ' +
+                                            ListLanguages[i].NameForRead);
+    // Запомним тот который активен
+    if ListLanguages[i].LnCode = Profile.MainLanguage then
+      vNumberLanguage := ClipInfoForm.LanguageComboBox.Items.Count - 1; // потому как индекс с -1
+
+  end;
+
+  if vNumberLanguage > 0 then
+    ClipInfoForm.LanguageComboBox.ItemIndex := vNumberLanguage;
+  {
+    если номер записи не знаешь, но известно, что в Items есть строка Txt, то так:
+    ComboBox.ItemIndex:=ComboBox.Items.IndexOf(Txt);
+  }
   // зачитываем значение форм из файла
   vPath := GetCurrentDir();
   vFullNameFile := vPath + '/' + cFileWithNameClip;
   if FileExists(vFullNameFile) then
-    begin
-      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);
-      EditClipName.Text := MemoClipInfo.Lines.Strings[0];
-      MemoClipInfo.Text := '';
-      // ShowMessage(vFullNameFile + ' загружен!');
-    end
-    else
-      EditClipName.Text := '';
+  begin
+    ClipInfo.LoadFromFile(vFullNameFile);
+    ClipName := ClipInfo.Strings[0];
+    ClipInfo.Text := '';
+    // ShowMessage(vFullNameFile + ' загружен!');
+  end
+  else
+    ClipName := '';
 
   vFullNameFile := vPath + '/' + cFileWithInfoClip;
   if FileExists(vFullNameFile) then
-    begin
-      MemoClipInfo.Lines.LoadFromFile(vFullNameFile);
-      // ShowMessage(vFullNameFile + ' загружен!');
-    end
-    else
-      MemoClipInfo.Text := '';
+  begin
+    ClipInfo.LoadFromFile(vFullNameFile);
+    // ShowMessage(vFullNameFile + ' загружен!');
+  end
+  else
+    ClipInfo.Text := '';
 
- //   ClipInfoForm.EditClipName.Text := EditClipName.Text;
- //   ClipInfoForm.MemoClipInfo.Text := MemoClipInfo.Text;
+  ClipInfoForm.EditClipName.Text := ClipName;
+  ClipInfoForm.MemoClipInfo.Text := ClipInfo.Text;
 
   resultForm := ClipInfoForm.ShowModal;
+
   if resultForm = mrOK then
   begin
-   // EditClipName.Text :=  ClipInfoForm.EditClipName.Text;
-   // MemoClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
-    // сохранение описания в файл
-    MemoClipInfo.Lines.SaveToFile(vFullNameFile);
-    // сохранение наименования в файл
+    ClipName := ClipInfoForm.EditClipName.Text;
+    // сохраняем имя в файл
+    ClipInfo.Text := ClipName;
     vFullNameFile := vPath + '/' + cFileWithNameClip;
-    MemoClipInfo.Text := MemoClipInfo.Text;
-    MemoClipInfo.Lines.SaveToFile(vFullNameFile);
+    ClipInfo.SaveToFile(vFullNameFile);
 
+    ClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
+    // сохранение описания в файл
+    vFullNameFile := vPath + '/' + cFileWithInfoClip;
+    ClipInfo.SaveToFile(vFullNameFile);
+
+    // загрузка выполнения
     vFullNameFile := vPath + '/' + cNameFile;
     // Теперь проверяем существует ли файл
     if FileExists(vFullNameFile) then
@@ -601,8 +622,8 @@ begin
       Memo1.Lines.LoadFromFile(vFullNameFile);
       CountRec := 0;
       MemoToRec(Memo1, Rec, CountRec);
-      // ShowMessage(vFullNameFile + ' загружен!');
-      //Start.Click(); //**************************************запуск выполнения
+      showmessage(vFullNameFile + ' загружен!');
+      Start.Click(); // **************************************запуск выполнения
     end
     else
       showmessage(vFullNameFile + ' не существует');
@@ -645,31 +666,12 @@ begin
   LabelCountLanguages.Caption := 'Перевод на ' +
     IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' языка';
   LnCodeForTranslation := 'unknow';
-  EditClipName.OnChange(Sender);
-  MemoClipInfo.OnChange(Sender);
+  ClipInfo := TStringList.Create;
 end;
 
-procedure TMain.MemoClipInfoChange(Sender: TObject);
-var
-  countLetters: integer;
-  i: integer;
+procedure TMain.FormShow(Sender: TObject);
 begin
-  countLetters := 0;
-  for i := 0 To MemoClipInfo.Lines.Count - 1 Do
-  begin
-    countLetters := countLetters + Length(MemoClipInfo.Lines.Strings[i]);
-  end;
-
-  EditCountInfoLetters.Text := IntToStr(countLetters);
-end;
-
-procedure TMain.MemoClipNameChange(Sender: TObject);
-var
-  countLetters: integer;
-  i: integer;
-begin
-  countLetters := countLetters + Length(EditClipName.Text);
-  EditCountNameLetters.Text := IntToStr(countLetters);
+  //
 end;
 
 end.
