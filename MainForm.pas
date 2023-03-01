@@ -43,7 +43,6 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     ButtonStep3_1: TButton;
-    TranslateTextMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -430,11 +429,7 @@ begin
 
               TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-              TranslateTextMemo.Text := TranslateText.Text;
-              // скопируем из мемо в буфер обена
-               TranslateTextMemo.SelectAll;
-               TranslateTextMemo.CopyToClipboard;
-//              Clipboard.AsText := TranslateText.Text;
+              Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -455,11 +450,8 @@ begin
                 LnCodeForTranslation);
               if Length(TranslateText.Text) > 5000 then // в длинну упрячем
                 TranslateText.Text := Copy(TranslateText.Text, 1, 5000);
-              TranslateTextMemo.Text := TranslateText.Text;
               // скопируем из мемо в буфер обена
-               TranslateTextMemo.SelectAll;
-               TranslateTextMemo.CopyToClipboard;
-              //Clipboard.AsText := TranslateText.Text;
+              Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -741,6 +733,7 @@ begin
     IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' языка';
   LnCodeForTranslation := 'unknow';
   ClipInfo := TStringList.Create;
+  TranslateText := TStringList.Create;
 end;
 
 procedure TMain.FormShow(Sender: TObject);
