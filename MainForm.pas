@@ -424,12 +424,13 @@ begin
             begin
               vStrFor7 := GoogleTranslate(ClipName, vLnFrom,
                 LnCodeForTranslation);
+              vStrFor7 := StringReplace(vStrFor7, #13, '',[rfReplaceAll, rfIgnoreCase]);
               if Length(vStrFor7) > 100 then // в длинну упрячем
                 vStrFor7 := Copy(vStrFor7, 1, 100);
 
               TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-              Clipboard.AsText := TranslateText.Text;
+              Clipboard.AsText := vStrFor7;//TranslateText.Text[0];
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -688,7 +689,7 @@ begin
       Memo1.Lines.LoadFromFile(vFullNameFile);
       CountRec := 0;
       MemoToRec(Memo1, Rec, CountRec);
-      showmessage(vFullNameFile + ' загружен!');
+      //showmessage(vFullNameFile + ' загружен!');
       Start.Click(); // **************************************запуск выполнения
     end
     else

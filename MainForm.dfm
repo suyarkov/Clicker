@@ -41,6 +41,12 @@ object Main: TMain
     Width = 121
     Height = 37
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1103#1079#1099#1082#1080
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 0
     OnClick = ButtonStep1Click
   end
@@ -50,6 +56,12 @@ object Main: TMain
     Width = 121
     Height = 37
     Caption = #1055#1077#1088#1077#1074#1086#1076' '#1089#1091#1073#1090#1080#1090#1088#1086#1074
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 1
     OnClick = ButtonStep2Click
   end
@@ -59,6 +71,12 @@ object Main: TMain
     Width = 121
     Height = 37
     Caption = #1055#1077#1088#1077#1074#1086#1076' '#1086#1087#1080#1089#1072#1085#1080#1103
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 2
     OnClick = ButtonStep3Click
   end
