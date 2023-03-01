@@ -3,6 +3,7 @@ unit fmClipInfoForm;
 interface
 
 uses
+  uLanguages,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
@@ -23,8 +24,11 @@ type
     procedure ButtonCancelClick(Sender: TObject);
     procedure EditClipNameChange(Sender: TObject);
     procedure MemoClipInfoChange(Sender: TObject);
+    //procedure SetLanguageComboBox(pListLanguages: TListLanguages; pMainLanguage: String);
+
   private
     { Private declarations }
+
   public
     { Public declarations }
   end;
@@ -69,6 +73,32 @@ begin
 
   EditCountInfoLetters.Text := IntToStr(countLetters);
 
+end;
+
+procedure SetLanguageComboBox(var pListLanguages: TListLanguages; pMainLanguage : String);
+var
+  i: integer;
+  vNumberLanguage: integer;
+begin
+  vNumberLanguage := 0;
+  // наполняем box значениями
+  for i := 1 to 1000 do
+  begin
+    // пустые уже не добавляем
+    if pListLanguages[i].LnCode = '' then
+      break;
+
+    ClipInfoForm.LanguageComboBox.Items.add(pListLanguages[i].LnCode + ' | ' +
+      pListLanguages[i].NameForRead);
+    // Запомним тот который активен
+    if pListLanguages[i].LnCode = pMainLanguage then
+      vNumberLanguage := ClipInfoForm.LanguageComboBox.Items.Count - 1;
+    // потому как индекс с -1
+
+  end;
+
+  if vNumberLanguage > 0 then
+    ClipInfoForm.LanguageComboBox.ItemIndex := vNumberLanguage;
 end;
 
 end.

@@ -3,11 +3,11 @@ unit MainForm;
 interface
 
 uses
-  uCodeKey, uLanguages, uTranslate,
+  uCodeKey, uLanguages, uTranslate, fmClipInfoForm,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
-  fmClipInfoForm, ClipBrd;
+  ClipBrd;
 
 // Настройка, наименование, языки, разрешение экрана, основной язык канала.
 type
@@ -40,22 +40,18 @@ type
     Start: TButton;
     Label2: TLabel;
     CountRepeatCicleEdit: TEdit;
-    TestButton: TButton;
     GetXYMouse: TButton;
     XYMouse: TEdit;
-    TestButton2: TButton;
-    MemoError: TMemo;
-    TranslateTextMemo: TMemo;
+    ButtonStep3_1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
-    procedure TestButtonClick(Sender: TObject);
     procedure ButtonStep1Click(Sender: TObject);
     procedure GetXYMouseClick(Sender: TObject);
     procedure ButtonStep2Click(Sender: TObject);
     procedure ButtonStep3Click(Sender: TObject);
-    procedure TestButton2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure ButtonStep3_1Click(Sender: TObject);
   private
     { Private declarations }
     Profile: TProfile;
@@ -276,7 +272,7 @@ begin
           end;
 
         7:
-          begin // перевод мемо1
+          begin // перевод мемо
             pMemo.Lines.add('7-');
           end;
 
@@ -420,8 +416,6 @@ begin
                 ListLanguages);
             end;
             // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
-            MemoError.Text := MemoError.Text + ' Из буфера обмена' + vStrFor6 +
-              ' ' + LnCodeForTranslation;
           end;
 
         7:
@@ -433,10 +427,10 @@ begin
               if Length(vStrFor7) > 100 then // в длинну упрячем
                 vStrFor7 := Copy(vStrFor7, 1, 100);
 
-              TranslateTextMemo.Text := vStrFor7;
+              TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-              TranslateTextMemo.SelectAll;
-              TranslateTextMemo.CopyToClipboard;
+
+              Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -453,14 +447,15 @@ begin
           begin // перевод мемоInfo 2
             if vIntControl > 0 then
             begin
-              TranslateTextMemo.Text := GoogleTranslate(ClipInfo.Text, vLnFrom,
+              TranslateText.Text := GoogleTranslate(ClipInfo.Text, vLnFrom,
                 LnCodeForTranslation);
-              if Length(TranslateTextMemo.Text) > 5000 then // в длинну упрячем
-                TranslateTextMemo.Text := Copy(TranslateTextMemo.Text, 1, 5000);
+              if Length(TranslateText.Text) > 5000 then // в длинну упрячем
+                TranslateText.Text := Copy(TranslateText.Text, 1, 5000);
 
               // скопируем из мемо в буфер обена
-              TranslateTextMemo.SelectAll;
-              TranslateTextMemo.CopyToClipboard;
+              // TranslateTextMemo.SelectAll;
+              // TranslateTextMemo.CopyToClipboard;
+              Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -495,25 +490,6 @@ begin
 
   showmessage('Завершено ' + IntToStr(vCountCicle) + ' = ' +
     IntToStr(CountRepeatCicle));
-end;
-
-procedure TMain.TestButton2Click(Sender: TObject);
-var
-  ln: string;
-begin
-  ln := 'ru';
-  TranslateText.Text := GoogleTranslate(ClipName, 'ru', ln);
-end;
-
-procedure TMain.TestButtonClick(Sender: TObject);
-var
-  res: word;
-begin
-  res := ClipInfoForm.ShowModal;
-  if res = mrOK then
-    MessageDlg('Диалог принят.', mtInformation, [mbYes], 0);
-  if res = mrCancel then
-    MessageDlg('Диалог отменен.', mtInformation, [mbYes], 0);
 end;
 
 procedure TMain.ButtonStep2Click(Sender: TObject);
@@ -561,10 +537,105 @@ begin
       break;
 
     ClipInfoForm.LanguageComboBox.Items.add(ListLanguages[i].LnCode + ' | ' +
-                                            ListLanguages[i].NameForRead);
+      ListLanguages[i].NameForRead);
     // Запомним тот который активен
     if ListLanguages[i].LnCode = Profile.MainLanguage then
-      vNumberLanguage := ClipInfoForm.LanguageComboBox.Items.Count - 1; // потому как индекс с -1
+      vNumberLanguage := ClipInfoForm.LanguageComboBox.Items.Count - 1;
+    // потому как индекс с -1
+
+  end;
+
+  if vNumberLanguage > 0 then
+    ClipInfoForm.LanguageComboBox.ItemIndex := vNumberLanguage;
+  {
+    если номер записи не знаешь, но известно, что в Items есть строка Txt, то так:
+    ComboBox.ItemIndex:=ComboBox.Items.IndexOf(Txt);
+  }
+  // зачитываем значение форм из файла
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cFileWithNameClip;
+  if FileExists(vFullNameFile) then
+  begin
+    ClipInfo.LoadFromFile(vFullNameFile);
+    ClipName := ClipInfo.Strings[0];
+    ClipInfo.Text := '';
+    // ShowMessage(vFullNameFile + ' загружен!');
+  end
+  else
+    ClipName := '';
+
+  vFullNameFile := vPath + '/' + cFileWithInfoClip;
+  if FileExists(vFullNameFile) then
+  begin
+    ClipInfo.LoadFromFile(vFullNameFile);
+    // ShowMessage(vFullNameFile + ' загружен!');
+  end
+  else
+    ClipInfo.Text := '';
+
+  ClipInfoForm.EditClipName.Text := ClipName;
+  ClipInfoForm.MemoClipInfo.Text := ClipInfo.Text;
+
+  resultForm := ClipInfoForm.ShowModal;
+
+  if resultForm = mrOK then
+  begin
+    ClipName := ClipInfoForm.EditClipName.Text;
+    // сохраняем имя в файл
+    ClipInfo.Text := ClipName;
+    vFullNameFile := vPath + '/' + cFileWithNameClip;
+    ClipInfo.SaveToFile(vFullNameFile);
+
+    ClipInfo.Text := ClipInfoForm.MemoClipInfo.Text;
+    // сохранение описания в файл
+    vFullNameFile := vPath + '/' + cFileWithInfoClip;
+    ClipInfo.SaveToFile(vFullNameFile);
+
+    // загрузка выполнения
+    vFullNameFile := vPath + '/' + cNameFile;
+    // Теперь проверяем существует ли файл
+    if FileExists(vFullNameFile) then
+    begin
+      Memo1.Lines.LoadFromFile(vFullNameFile);
+      CountRec := 0;
+      MemoToRec(Memo1, Rec, CountRec);
+      showmessage(vFullNameFile + ' загружен!');
+      Start.Click(); // **************************************запуск выполнения
+    end
+    else
+      showmessage(vFullNameFile + ' не существует');
+  end
+  else
+    MessageDlg('Действие отменено.', mtInformation, [mbYes], 0);
+end;
+
+procedure TMain.ButtonStep3_1Click(Sender: TObject);
+const
+  cNameFile: string = 'Step3_1.cls';
+  cFileWithNameClip: string = 'NameClip.cls';
+  cFileWithInfoClip: string = 'InfoClip.cls';
+var
+  resultForm: word;
+  vPath: string;
+  vFullNameFile: string;
+  i: integer;
+  vNumberLanguage: integer;
+
+begin
+  vNumberLanguage := 0;
+  // наполняем box значениями
+  for i := 1 to 1000 do
+  begin
+    // пустые уже не добавляем
+    if ListLanguages[i].LnCode = '' then
+      break;
+
+    ClipInfoForm.LanguageComboBox.Items.add(ListLanguages[i].LnCode + ' | ' +
+      ListLanguages[i].NameForRead);
+    // Запомним тот который активен
+    if ListLanguages[i].LnCode = Profile.MainLanguage then
+      vNumberLanguage := ClipInfoForm.LanguageComboBox.Items.Count - 1;
+    // потому как индекс с -1
 
   end;
 
