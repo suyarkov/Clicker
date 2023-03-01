@@ -125,6 +125,15 @@ object Main: TMain
     TabOrder = 9
     OnClick = ButtonStep3_1Click
   end
+  object TranslateTextMemo: TMemo
+    Left = 32
+    Top = 208
+    Width = 681
+    Height = 65
+    Lines.Strings = (
+      'TranslateTextMemo')
+    TabOrder = 10
+  end
   object OpenDialog1: TOpenDialog
     Left = 407
     Top = 296

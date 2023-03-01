@@ -43,6 +43,7 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     ButtonStep3_1: TButton;
+    TranslateTextMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -429,8 +430,11 @@ begin
 
               TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-
-              Clipboard.AsText := TranslateText.Text;
+              TranslateTextMemo.Text := TranslateText.Text;
+              // скопируем из мемо в буфер обена
+               TranslateTextMemo.SelectAll;
+               TranslateTextMemo.CopyToClipboard;
+//              Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -451,11 +455,11 @@ begin
                 LnCodeForTranslation);
               if Length(TranslateText.Text) > 5000 then // в длинну упрячем
                 TranslateText.Text := Copy(TranslateText.Text, 1, 5000);
-
+              TranslateTextMemo.Text := TranslateText.Text;
               // скопируем из мемо в буфер обена
-              // TranslateTextMemo.SelectAll;
-              // TranslateTextMemo.CopyToClipboard;
-              Clipboard.AsText := TranslateText.Text;
+               TranslateTextMemo.SelectAll;
+               TranslateTextMemo.CopyToClipboard;
+              //Clipboard.AsText := TranslateText.Text;
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -599,7 +603,6 @@ begin
       Memo1.Lines.LoadFromFile(vFullNameFile);
       CountRec := 0;
       MemoToRec(Memo1, Rec, CountRec);
-      showmessage(vFullNameFile + ' загружен!');
       Start.Click(); // **************************************запуск выполнения
     end
     else
