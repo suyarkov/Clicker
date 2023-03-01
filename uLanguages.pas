@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
   System.Variants,
   System.JSON, System.Net.HTTPClient,
-  System.NetEncoding;
+  System.NetEncoding, Vcl.Dialogs,
+  Character;
 
 type
   TLanguage = record
@@ -14,18 +15,61 @@ type
     LnCode: string;
     NameForEnter: string;
     NameForRead: string;
+    Activ: integer;
   end;
 
 type
   TListLanguages = Array [1 .. 1000] of TLanguage;
 
-function InitListLanguages(): TListLanguages;
-function GetLnCode(NameRead: String): String;
-function GetLnCodeFromList(NameRead: String; ListLanguages : TListLanguages): String;
+function InitListLanguages(): TListLanguages; //инициализация из файла
+function InitListLanguagesStatic(): TListLanguages;
+
+function GetLnCode(pNameRead: String): String;
+function GetLnCodeFromList(pNameRead: String; pListLanguages : TListLanguages): String;
 
 implementation
 
 function InitListLanguages(): TListLanguages;
+const
+  cNameFile: string = 'Languages.lng';
+var
+  vList: TListLanguages;
+  i: integer;
+  vPath : string;
+  vFullNameFile : string;
+  FileText : TStringList; // Tstrings;
+  vStr : string;
+  vPos : integer;
+begin
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cNameFile;
+  // Теперь проверяем существует ли файл
+  if FileExists(vFullNameFile) then
+  begin
+    FileText := TStringList.Create;
+    FileText.LoadFromFile(vFullNameFile);
+    if FileText.Count > 0 then
+    begin
+       for i := 0 to FileText.Count - 1 do
+       begin
+         vStr := FileText.Strings[i];
+         vPos := Pos(' ', vStr);
+         vList[i+1].LnCode := Copy(vStr, 1, vPos - 1);
+         vStr := Copy(vStr, vPos+1);
+         vPos := Pos('.', vStr);
+         vList[i+1].NameForEnter := ToUpper(Copy(vStr, 1, vPos - 1));
+         vList[i+1].NameForRead := vList[i+1].NameForEnter;
+         vList[i+1].Activ := StrToInt(Copy(vStr, vPos+1, vPos+1));
+       end;
+       result := vList;
+    end;
+  end
+  else
+    showmessage(vFullNameFile + ' не существует файла с языками');
+
+end;
+
+function InitListLanguagesStatic(): TListLanguages;
 var
   vList: TListLanguages;
   i: integer;
@@ -327,7 +371,7 @@ begin
   result := vList;
 end;
 
-function GetLnCode(NameRead: String): String;
+function GetLnCode(pNameRead: String): String;
 var
   vList: TListLanguages;
   i: integer;
@@ -336,7 +380,7 @@ begin
   vList := InitListLanguages();
   i := 1;
   repeat
-    if NameRead = vList[i].NameForRead then
+    if ToUpper(pNameRead) = vList[i].NameForRead then
     begin
       result := vList[i].LnCode;
       i:=1000;
@@ -346,21 +390,24 @@ begin
   until (i> 2000) or (vList[i].LnCode = '');
 end;
 
-function GetLnCodeFromList(NameRead: String; ListLanguages : TListLanguages): String;
+// по строке с наименование языке определяем сам язык
+function GetLnCodeFromList(pNameRead: String; pListLanguages : TListLanguages): String;
 var
   i: integer;
+  vUpperName : string;
 begin
+  vUpperName := ToUpper(pNameRead);
   result := 'unknown';
   i := 1;
   repeat
-    if NameRead = ListLanguages[i].NameForRead then
+    if vUpperName = pListLanguages[i].NameForRead then
     begin
-      result := ListLanguages[i].LnCode;
+      result := pListLanguages[i].LnCode;
       i:=1000;
       break;
     end;
     inc(i);
-  until (i >= 200) or (ListLanguages[i].LnCode = '');
+  until (i >= 300) or (pListLanguages[i].LnCode = '');
 end;
 
 end.
