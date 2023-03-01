@@ -371,23 +371,14 @@ begin
   result := vList;
 end;
 
+// по инициализации нового списка языков
 function GetLnCode(pNameRead: String): String;
 var
   vList: TListLanguages;
   i: integer;
 begin
-  result := 'unknown';
   vList := InitListLanguages();
-  i := 1;
-  repeat
-    if ToUpper(pNameRead) = vList[i].NameForRead then
-    begin
-      result := vList[i].LnCode;
-      i:=1000;
-      break;
-    end;
-    inc(i);
-  until (i> 2000) or (vList[i].LnCode = '');
+  result :=  GetLnCodeFromList(pNameRead, vList);
 end;
 
 // по строке с наименование языке определяем сам язык
@@ -396,7 +387,10 @@ var
   i: integer;
   vUpperName : string;
 begin
+  // приведем к верхнему регистру и ANSI и UTF
   vUpperName := ToUpper(pNameRead);
+  // уберем лишние пробеллы
+  vUpperName :=StringReplace(vUpperName, ' ', '',[rfReplaceAll, rfIgnoreCase]);
   result := 'unknown';
   i := 1;
   repeat
