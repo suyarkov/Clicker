@@ -3,7 +3,7 @@ unit MainForm;
 interface
 
 uses
-  uCodeKey, uLanguages, uTranslate, fmClipInfoForm,
+  uCodeKey, uLanguages, uTranslate, fmClipInfoForm, uTasks,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
@@ -333,6 +333,7 @@ var
   vStrFor7: string;
   vIntControl: integer;
   vLnFrom, LnFor: string;
+  vRetTask: integer; // возращаемый результат выполнения задачи, удачно =1
 begin
   vLnFrom := Profile.MainLanguage;
   vLnFrom := 'ru'; // пока на время!!!
@@ -352,42 +353,27 @@ begin
       case Rec[i].TypeComand of
         1:
           begin // перемещение
-            SetCursorPos(Rec[i].IntPar1, Rec[i].IntPar2);
+            vRetTask := Task_1(Rec[i].IntPar1, Rec[i].IntPar2);
           end;
 
         2:
           begin // клик
-            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            vRetTask := Task_2();
           end;
 
         3:
           begin // пауза
-            Delay(Rec[i].IntPar1);
-            // sleep(Rec[i].IntPar1 * 1000);
+            vRetTask := Task_3(Rec[i].IntPar1);
           end;
 
         4:
           begin // скрол
-            Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Cardinal(-Rec[i].IntPar1), 0);
+            vRetTask := Task_4(Rec[i].IntPar1);
           end;
 
         5:
           begin // набор текста , нажатие по нему клавиш
-            Sleep(500);
-            Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Cardinal(-12000), 0);
-            // Delay(500);
-            Sleep(500);
-            for j := 1 to Length(Rec[i].StrPar1) do
-            begin
-              vKey := Rec[i].StrPar1[j];
-              KeyEm(vKey);
-            end;
-            keybd_event(VK_RETURN, 0, 0, 0); // Нажатие 's'.
-            // sleep(1000);
-            keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0); // Отпускание 's'.
-            // Delay( 1000);
-
+            vRetTask := Task_5(Rec[i].StrPar1);
           end;
 
         6:
@@ -424,13 +410,14 @@ begin
             begin
               vStrFor7 := GoogleTranslate(ClipName, vLnFrom,
                 LnCodeForTranslation);
-              vStrFor7 := StringReplace(vStrFor7, #13, '',[rfReplaceAll, rfIgnoreCase]);
+              vStrFor7 := StringReplace(vStrFor7, #13, '',
+                [rfReplaceAll, rfIgnoreCase]);
               if Length(vStrFor7) > 100 then // в длинну упрячем
                 vStrFor7 := Copy(vStrFor7, 1, 100);
 
               TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-              Clipboard.AsText := vStrFor7;//TranslateText.Text[0];
+              Clipboard.AsText := vStrFor7; // TranslateText.Text[0];
               // активируем окно вставки текста
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -689,7 +676,7 @@ begin
       Memo1.Lines.LoadFromFile(vFullNameFile);
       CountRec := 0;
       MemoToRec(Memo1, Rec, CountRec);
-      //showmessage(vFullNameFile + ' загружен!');
+      // showmessage(vFullNameFile + ' загружен!');
       Start.Click(); // **************************************запуск выполнения
     end
     else

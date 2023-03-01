@@ -109,6 +109,7 @@
             <Form>ClipInfoForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uTasks.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

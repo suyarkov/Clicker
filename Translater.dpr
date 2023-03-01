@@ -6,7 +6,8 @@ uses
   uLanguages in 'uLanguages.pas',
   uCodeKey in 'uCodeKey.pas',
   uTranslate in 'uTranslate.pas',
-  fmClipInfoForm in 'fmClipInfoForm.pas' {ClipInfoForm};
+  fmClipInfoForm in 'fmClipInfoForm.pas' {ClipInfoForm},
+  uTasks in 'uTasks.pas';
 
 {$R *.res}
 
