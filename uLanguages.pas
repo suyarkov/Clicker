@@ -21,11 +21,16 @@ type
 type
   TListLanguages = Array [1 .. 1000] of TLanguage;
 
-function InitListLanguages(): TListLanguages; //инициализация из файла
+function InitListLanguages(): TListLanguages; // инициализация из файла
 function InitListLanguagesStatic(): TListLanguages;
 
 function GetLnCode(pNameRead: String): String;
-function GetLnCodeFromList(pNameRead: String; pListLanguages : TListLanguages): String;
+function GetLnCodeFromList(pNameRead: String;
+  pListLanguages: TListLanguages): String;
+function GetNextLnCodeForEnter(pLastLnCode: String;
+  pListLanguages: TListLanguages): String;
+function GetNameEnterOnLnCodeFromList(pLnCode: String;
+  pListLanguages: TListLanguages): String;
 
 implementation
 
@@ -35,11 +40,11 @@ const
 var
   vList: TListLanguages;
   i: integer;
-  vPath : string;
-  vFullNameFile : string;
-  FileText : TStringList; // Tstrings;
-  vStr : string;
-  vPos : integer;
+  vPath: string;
+  vFullNameFile: string;
+  FileText: TStringList; // Tstrings;
+  vStr: string;
+  vPos: integer;
 begin
   vPath := GetCurrentDir();
   vFullNameFile := vPath + '/' + cNameFile;
@@ -50,18 +55,18 @@ begin
     FileText.LoadFromFile(vFullNameFile);
     if FileText.Count > 0 then
     begin
-       for i := 0 to FileText.Count - 1 do
-       begin
-         vStr := FileText.Strings[i];
-         vPos := Pos(' ', vStr);
-         vList[i+1].LnCode := Copy(vStr, 1, vPos - 1);
-         vStr := Copy(vStr, vPos+1);
-         vPos := Pos('.', vStr);
-         vList[i+1].NameForEnter := ToUpper(Copy(vStr, 1, vPos - 1));
-         vList[i+1].NameForRead := vList[i+1].NameForEnter;
-         vList[i+1].Activ := StrToInt(Copy(vStr, vPos+1, vPos+1));
-       end;
-       result := vList;
+      for i := 0 to FileText.Count - 1 do
+      begin
+        vStr := FileText.Strings[i];
+        vPos := Pos(' ', vStr);
+        vList[i + 1].LnCode := Copy(vStr, 1, vPos - 1);
+        vStr := Copy(vStr, vPos + 1);
+        vPos := Pos('.', vStr);
+        vList[i + 1].NameForEnter := ToUpper(Copy(vStr, 1, vPos - 1));
+        vList[i + 1].NameForRead := vList[i + 1].NameForEnter;
+        vList[i + 1].Activ := StrToInt(Copy(vStr, vPos + 1, vPos + 1));
+      end;
+      result := vList;
     end;
   end
   else
@@ -378,26 +383,86 @@ var
   i: integer;
 begin
   vList := InitListLanguages();
-  result :=  GetLnCodeFromList(pNameRead, vList);
+  result := GetLnCodeFromList(pNameRead, vList);
 end;
 
+
+
 // по строке с наименование языке определяем сам язык
-function GetLnCodeFromList(pNameRead: String; pListLanguages : TListLanguages): String;
+function GetLnCodeFromList(pNameRead: String;
+  pListLanguages: TListLanguages): String;
 var
   i: integer;
-  vUpperName : string;
+  vUpperName: string;
 begin
   // приведем к верхнему регистру и ANSI и UTF
   vUpperName := ToUpper(pNameRead);
   // уберем лишние пробеллы
-  vUpperName :=StringReplace(vUpperName, ' ', '',[rfReplaceAll, rfIgnoreCase]);
+  vUpperName := StringReplace(vUpperName, ' ', '',
+    [rfReplaceAll, rfIgnoreCase]);
   result := 'unknown';
   i := 1;
   repeat
     if vUpperName = pListLanguages[i].NameForRead then
     begin
       result := pListLanguages[i].LnCode;
-      i:=1000;
+      i := 1000;
+      break;
+    end;
+    inc(i);
+  until (i >= 300) or (pListLanguages[i].LnCode = '');
+end;
+
+
+
+function GetNextLnCodeForEnter(pLastLnCode: String;
+  pListLanguages: TListLanguages): String;
+var
+  i: integer;
+  vFlNext: integer;
+begin
+  vFlNext := 0; // следующий пока не щем
+  result := '';
+  if pLastLnCode = '' then
+  begin
+    vFlNext := 1; // если пустой то берем первый подходящий
+  end;
+
+  i := 1;
+  repeat
+    // нашли следующий язык для ввода
+    if (vFlNext = 1) and (pListLanguages[i].Activ = 1) then
+    begin
+      result := pListLanguages[i].LnCode;
+      i := 1000;
+      break;
+    end;
+
+    if pLastLnCode = pListLanguages[i].LnCode then
+    begin
+      vFlNext := 1; // нашли текущий, искать следующий язык для ввода
+    end;
+
+    inc(i);
+  until (i >= 300) or (pListLanguages[i].LnCode = '');
+end;
+
+
+
+// по строке с кодом языка определяем сам язык для ввода
+function GetNameEnterOnLnCodeFromList(pLnCode: String;
+  pListLanguages: TListLanguages): String;
+var
+  i: integer;
+begin
+  // уберем лишние пробеллы
+  result := '';
+  i := 1;
+  repeat
+    if pLnCode = pListLanguages[i].LnCode then
+    begin
+      result := ToUpper(pListLanguages[i].NameForEnter); // в верхнем регистре
+      i := 1000;
       break;
     end;
     inc(i);

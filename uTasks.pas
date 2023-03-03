@@ -4,10 +4,10 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
-  System.Variants,
-  Winapi.Windows, Vcl.Forms,
-  uCodeKey;
-
+  System.Variants, Winapi.Windows, Vcl.Forms, ClipBrd,
+  uCodeKey, uLanguages, uTranslate;
+// var
+// LnCodeForTranslation : string; // как ведут себя глобальные переменные
 function Task_1(const pX, pY: integer): integer;
 // перемещение курсора в координаты
 function Task_2(): integer; // правый одиночный клик мышкой
@@ -16,11 +16,14 @@ function Task_3(pMilliseconds: LongInt): integer;
 function Task_4(pPixels: integer): integer; // скрол
 function Task_5(pString: string): integer;
 // набор переданного текста и в конце ВВод
-function Task_6(): integer;
-function Task_7(): integer;
+function Task_6(LnCodeForTranslation: string; ListLanguages: TListLanguages;
+  pIntControl: integer): integer;
+function Task_7(pIntControl: integer; pClipName, pStrTranslate, pLnFrom,
+  pLnCodeForTranslation: string): integer;
 function Task_8(): integer;
 function Task_9(): integer;
-function Task_100(): integer;
+function Task_101(pX, pY, pRepeat: integer;
+  pListLanguages: TListLanguages; var pLastLng: string): integer;
 
 procedure Delay(dwMilliseconds: LongInt);
 
@@ -85,10 +88,11 @@ var
   CodeKey: integer;
 begin
   try
-    Sleep(500); // с тормозами других программ
+    Delay(500);
+    // Sleep(500); // с тормозами других программ
     Mouse_Event(MOUSEEVENTF_WHEEL, 0, 0, Cardinal(-12000), 0);
-    // Delay(500); -- без тормозов других программ
-    Sleep(500);  // с тормозами других программ
+    Delay(500); // без тормозов других программ
+    // Sleep(500); // с тормозами других программ
     for i := 1 to Length(pString) do
     begin
       vKey := pString[i];
@@ -107,12 +111,36 @@ begin
   end;
 end;
 
-// перемещение курсора
-function Task_6(): integer;
+// двойной клик, и копирование в буфер обмена выделенного и в мемо
+// и далее из буфера обмена в мемо
+function Task_6(LnCodeForTranslation: string; ListLanguages: TListLanguages;
+  pIntControl: integer): integer;
+var
+  vIntControl: integer;
+  vStrOld, vStrNew: string;
+
 begin
   try
+    vIntControl := 0;
+    Clipboard.AsText := ' ';
+    vStrOld := Clipboard.AsText;
     Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
     Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+    Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+    Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+    // Delay(150);
+    keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+    keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
+    keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+    keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+    // Отпускание левого Ctrl.
+    Delay(100);
+    vStrNew := Clipboard.AsText;
+    if vStrNew <> vStrOld then
+    begin
+      vIntControl := 1;
+      LnCodeForTranslation := GetLnCodeFromList(vStrNew, ListLanguages);
+    end;
 
     result := 1;
   except
@@ -122,11 +150,32 @@ begin
 end;
 
 // перемещение курсора
-function Task_7(): integer;
+function Task_7(pIntControl: integer; pClipName, pStrTranslate, pLnFrom,
+  pLnCodeForTranslation: string): integer;
+var
+  vStr: string;
 begin
   try
-    Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-    Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+    if pIntControl > 0 then
+    begin
+      vStr := GoogleTranslate(pClipName, pLnFrom, pLnCodeForTranslation);
+      vStr := StringReplace(vStr, #13, '', [rfReplaceAll, rfIgnoreCase]);
+      if Length(vStr) > 100 then // в длинну упрячем
+        vStr := Copy(vStr, 1, 100);
+
+      pStrTranslate := vStr;
+      // скопируем из мемо в буфер обена
+      Clipboard.AsText := vStr; // TranslateText.Text[0];
+      // активируем окно вставки текста
+      Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+      Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+      // вставить из буфера в окно
+      keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+      keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
+      keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+      keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+      // Отпускание левого Ctrl.
+    end;
 
     result := 1;
   except
@@ -163,13 +212,51 @@ begin
   end;
 end;
 
-// перемещение курсора
-function Task_100(): integer;
+// добавление всех языков
+function Task_101(pX, pY, pRepeat: integer;
+  pListLanguages: TListLanguages; var pLastLng: string): integer;
+var
+  vRet: integer;
+  vPause1: integer;
+  vPause2: integer;
+  vNameLenguage: string;
+  pNextLng: string;
 begin
-  try
-    Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-    Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+  if pLastLng = 'unknown' then
+  begin
+    Exit;
+  end;
 
+  if (pLastLng = 'az') then
+  begin
+    pLastLng := pLastLng;
+  end;
+
+  try
+    vPause1 := 700;
+    vPause2 := 720;
+    repeat
+      // координаты
+      vRet := Task_1(pX, pY);
+      // клик
+      vRet := Task_2();
+      // пауза
+      vRet := Task_3(vPause1);
+      // набор текста - текст взять из списка! и крутить по кругу
+      // подбор языка для ввода
+      pNextLng := GetNextLnCodeForEnter(pLastLng, pListLanguages);
+      if pNextLng <> '' then
+      begin
+        vNameLenguage := GetNameEnterOnLnCodeFromList(pNextLng, pListLanguages);
+        vRet := Task_5(vNameLenguage);
+        pLastLng := pNextLng;
+        // пауза 2
+        vRet := Task_3(vPause2);
+        // скрол
+        vRet := Task_4(2000);
+      end;
+
+    until ((pNextLng = '') or (pRepeat = 0));
     result := 1;
   except
     result := -1;
@@ -185,7 +272,8 @@ begin
   repeat
     iStop := GetTickCount;
     Sleep(1); // Значительно уменьшает загрузку процессора
-    Application.ProcessMessages;
+    // разрешает процесса ожидания делать другие ветки
+     Application.ProcessMessages;
   until (iStop - iStart) >= dwMilliseconds;
 end;
 

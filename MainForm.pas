@@ -24,6 +24,7 @@ type
     TypeComand: integer;
     IntPar1: integer;
     IntPar2: integer;
+    IntPar3: integer;
     StrPar1: string;
   end;
 
@@ -115,7 +116,7 @@ begin
   begin
     pRec[i].TypeComand := 0;
     pRec[i].IntPar1 := 0;
-    pRec[i].IntPar1 := 0;
+    pRec[i].IntPar2 := 0;
     pRec[i].StrPar1 := '';
   end;
   pCountRec := 0;
@@ -211,6 +212,19 @@ begin
             vRecord.StrPar1 := vStrPart; // число
             CountRepeatCicleEdit.Text := vStrPart;
             CountRepeatCicle := StrToInt(vStrPart);
+          end;
+
+        101:
+          begin // перемещение
+            vStrPart := Copy(vStr, vPos + 1, Length(vStr) - (vPos));
+            vPos := Pos('-', vStrPart); // координаты Х
+            vRecord.IntPar1 := StrToInt(Copy(vStrPart, 1, vPos - 1));
+            vStrPart := Copy(vStrPart, vPos + 1, Length(vStrPart) - (vPos));
+            vPos := Pos('-', vStrPart); // координаты Y
+            vRecord.IntPar2 := StrToInt(Copy(vStrPart, 1, vPos - 1));
+            vStrPart := Copy(vStrPart, vPos + 1, Length(vStrPart) - (vPos));
+            // повторять в цикле для оставшихся языков
+            vRecord.IntPar3 := StrToInt(vStrPart);
           end;
       end;
       pRec[i] := vRecord;
@@ -334,6 +348,7 @@ var
   vIntControl: integer;
   vLnFrom, LnFor: string;
   vRetTask: integer; // возращаемый результат выполнения задачи, удачно =1
+  vLastLng: string;
 begin
   vLnFrom := Profile.MainLanguage;
   vLnFrom := 'ru'; // пока на время!!!
@@ -341,6 +356,7 @@ begin
   Delay(1000);
   vCountCicle := 0;
   vIntControl := 0;
+  vLastLng := '';
   repeat
     vCountCicle := vCountCicle + 1;
     vX := 0;
@@ -379,28 +395,32 @@ begin
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного и в мемо
             // и далее из буфера обмена в мемо
-            vIntControl := 0;
-            Clipboard.AsText := ' ';
-            vStrFor7 := Clipboard.AsText;
-            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            // Delay(150);
-            keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-            keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
-            keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            // Отпускание левого Ctrl.
-            Delay(100);
-            vStrFor6 := Clipboard.AsText;
-            if vStrFor6 <> vStrFor7 then
-            begin
+            vRetTask := Task_6(LnCodeForTranslation, ListLanguages,
+              vIntControl);
+            {
+              vIntControl := 0;
+              Clipboard.AsText := ' ';
+              vStrFor7 := Clipboard.AsText;
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+              // Delay(150);
+              keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+              keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
+              keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+              keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+              // Отпускание левого Ctrl.
+              Delay(100);
+              vStrFor6 := Clipboard.AsText;
+              if vStrFor6 <> vStrFor7 then
+              begin
               vIntControl := 1;
               Label2.Caption := vStrFor6;
               LnCodeForTranslation := GetLnCodeFromList(vStrFor6,
-                ListLanguages);
-            end;
+              ListLanguages);
+              end;
+            }
             // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
           end;
 
@@ -454,6 +474,13 @@ begin
 
         9:
           begin // вставка из мемо в буфер, и далее в позицию
+          end;
+
+        101:
+          begin // вставка из мемо в буфер, и далее в позицию
+            vRetTask := Task_101(Rec[i].IntPar1, Rec[i].IntPar2, Rec[i].IntPar3,
+              ListLanguages, vLastLng);
+            vLastLng := vLastLng;
           end;
       end;
     end;

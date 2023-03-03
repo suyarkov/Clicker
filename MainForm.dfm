@@ -2,8 +2,8 @@ object Main: TMain
   Left = 0
   Top = 0
   Caption = 'Main'
-  ClientHeight = 244
-  ClientWidth = 712
+  ClientHeight = 247
+  ClientWidth = 140
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -81,8 +81,8 @@ object Main: TMain
     OnClick = ButtonStep3Click
   end
   object LoadTask: TButton
-    Left = 382
-    Top = 56
+    Left = 166
+    Top = 39
     Width = 75
     Height = 25
     Caption = 'LoadTask'
@@ -100,8 +100,8 @@ object Main: TMain
     Visible = False
   end
   object Start: TButton
-    Left = 382
-    Top = 25
+    Left = 166
+    Top = 8
     Width = 75
     Height = 25
     Caption = 'Start'
@@ -118,8 +118,8 @@ object Main: TMain
     Text = 'CountRepeatCicleEdit'
   end
   object GetXYMouse: TButton
-    Left = 382
-    Top = 116
+    Left = 166
+    Top = 99
     Width = 75
     Height = 25
     Caption = 'GetXYMouse'
@@ -127,8 +127,8 @@ object Main: TMain
     OnClick = GetXYMouseClick
   end
   object XYMouse: TEdit
-    Left = 382
-    Top = 87
+    Left = 166
+    Top = 70
     Width = 75
     Height = 23
     TabOrder = 8
@@ -144,7 +144,7 @@ object Main: TMain
     OnClick = ButtonStep3_1Click
   end
   object OpenDialog1: TOpenDialog
-    Left = 423
-    Top = 216
+    Left = 207
+    Top = 199
   end
 end
