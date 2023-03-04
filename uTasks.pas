@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
-  System.Variants, Winapi.Windows, Vcl.Forms, ClipBrd,
+  System.Variants, Winapi.Windows, Vcl.Forms, ClipBrd, Vcl.Controls,Vcl.Dialogs,
   uCodeKey, uLanguages, uTranslate;
 // var
 // LnCodeForTranslation : string; // как ведут себя глобальные переменные
@@ -22,12 +22,20 @@ function Task_7(pIntControl: integer; pClipName, pStrTranslate, pLnFrom,
   pLnCodeForTranslation: string): integer;
 function Task_8(): integer;
 function Task_9(): integer;
-function Task_101(pX, pY, pRepeat: integer;
-  pListLanguages: TListLanguages; var pLastLng: string): integer;
+function Task_101(pX, pY, pRepeat: integer; pListLanguages: TListLanguages;
+  var pLastLng: string): integer;
 
 procedure Delay(dwMilliseconds: LongInt);
 
 implementation
+
+procedure GetPosXY(var pX, pY: integer);
+var
+  MyMouse: TMouse;
+begin
+  pX := MyMouse.CursorPos.x;
+  pY := MyMouse.CursorPos.y;
+end;
 
 // перемещение курсора
 function Task_1(const pX, pY: integer): integer;
@@ -213,50 +221,71 @@ begin
 end;
 
 // добавление всех языков
-function Task_101(pX, pY, pRepeat: integer;
-  pListLanguages: TListLanguages; var pLastLng: string): integer;
+function Task_101(pX, pY, pRepeat: integer; pListLanguages: TListLanguages;
+  var pLastLng: string): integer;
+const
+  cMaxCicle: integer = 300;
 var
+  vCicle: integer; // против зацикливания
   vRet: integer;
+  vPausePosClick: integer;
   vPause1: integer;
   vPause2: integer;
   vNameLenguage: string;
-  pNextLng: string;
+  vNextLng: string;
+  vX, vY: integer; // считанные координаты
+
 begin
   if pLastLng = 'unknown' then
   begin
     Exit;
   end;
 
-  if (pLastLng = 'az') then
-  begin
-    pLastLng := pLastLng;
-  end;
-
   try
+    vPausePosClick := 150;
     vPause1 := 700;
-    vPause2 := 720;
+    vPause2 := 850;
+    vCicle := 0;
+    // набор текста - текст взять из списка! и крутить по кругу
     repeat
-      // координаты
-      vRet := Task_1(pX, pY);
-      // клик
-      vRet := Task_2();
-      // пауза
-      vRet := Task_3(vPause1);
-      // набор текста - текст взять из списка! и крутить по кругу
       // подбор языка для ввода
-      pNextLng := GetNextLnCodeForEnter(pLastLng, pListLanguages);
-      if pNextLng <> '' then
+      vNextLng := GetNextLnCodeForEnter(pLastLng, pListLanguages);
+      // только если нашли следующий язык
+      if vNextLng <> '' then
       begin
-        vNameLenguage := GetNameEnterOnLnCodeFromList(pNextLng, pListLanguages);
+        // координаты кнопки открыть окно с выбором языков
+        vRet := Task_1(pX, pY);
+        // пауза
+        vRet := Task_3(vPausePosClick);
+        // клик
+        vRet := Task_2();
+        // пауза
+        vRet := Task_3(vPause1);
+
+        // подбор языка для ввода
+        vNextLng := GetNextLnCodeForEnter(pLastLng, pListLanguages);
+
+        // чтоб двигая мышку можно было остановить цикл
+        GetPosXY(vX, vY);
+        if (pX <> vX) or (pY <> vY) then
+        begin
+          showmessage(intToStr(pX) + ':' + intToStr(pY) + ' != '
+                      + intToStr(vX) + ':' + intToStr(vY));
+          Exit;
+        end;
+
+        vNameLenguage := GetNameEnterOnLnCodeFromList(vNextLng, pListLanguages);
         vRet := Task_5(vNameLenguage);
-        pLastLng := pNextLng;
+        pLastLng := vNextLng;
         // пауза 2
         vRet := Task_3(vPause2);
         // скрол
-        vRet := Task_4(2000);
+        vRet := Task_4(20000);
+        // пауза позиционирования
+        vRet := Task_3(vPausePosClick);
       end;
-
-    until ((pNextLng = '') or (pRepeat = 0));
+      inc(vCicle);
+    until ((vNextLng = '') or (pRepeat = 0) or (vCicle >= cMaxCicle));
     result := 1;
   except
     result := -1;
@@ -273,7 +302,7 @@ begin
     iStop := GetTickCount;
     Sleep(1); // Значительно уменьшает загрузку процессора
     // разрешает процесса ожидания делать другие ветки
-     Application.ProcessMessages;
+    Application.ProcessMessages;
   until (iStop - iStart) >= dwMilliseconds;
 end;
 

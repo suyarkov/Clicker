@@ -395,9 +395,9 @@ begin
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного и в мемо
             // и далее из буфера обмена в мемо
-            vRetTask := Task_6(LnCodeForTranslation, ListLanguages,
-              vIntControl);
-            {
+            //vRetTask := Task_6(LnCodeForTranslation, ListLanguages,
+            //  vIntControl);
+
               vIntControl := 0;
               Clipboard.AsText := ' ';
               vStrFor7 := Clipboard.AsText;
@@ -420,7 +420,7 @@ begin
               LnCodeForTranslation := GetLnCodeFromList(vStrFor6,
               ListLanguages);
               end;
-            }
+
             // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
           end;
 
