@@ -7,7 +7,8 @@ uses
   uCodeKey in 'uCodeKey.pas',
   uTranslate in 'uTranslate.pas',
   fmClipInfoForm in 'fmClipInfoForm.pas' {ClipInfoForm},
-  uTasks in 'uTasks.pas';
+  uTasks in 'uTasks.pas',
+  fmProfile in 'fmProfile.pas' {ProfileForm};
 
 {$R *.res}
 
@@ -16,5 +17,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMain, Main);
   Application.CreateForm(TClipInfoForm, ClipInfoForm);
+  Application.CreateForm(TProfileForm, ProfileForm);
   Application.Run;
 end.

@@ -55,6 +55,7 @@ type
     procedure ButtonStep3_1Click(Sender: TObject);
   private
     { Private declarations }
+    var verProgram : string;
     Profile: TProfile;
     // настройка профиля для разных расширений, разных каналов.
     ListLanguages: TListLanguages; // список всех возможных языков в системе
@@ -737,6 +738,7 @@ end;
 
 procedure TMain.FormCreate(Sender: TObject);
 begin
+  verProgram := '0.1';
   Profile := ProfileGet(1);
   ListLanguages := InitListLanguages();
   // Инициализация надписей согласной профилю
