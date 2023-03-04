@@ -53,9 +53,11 @@ type
     procedure ButtonStep3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ButtonStep3_1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
-    var verProgram : string;
+  var
+    verProgram: string;
     Profile: TProfile;
     // настройка профиля для разных расширений, разных каналов.
     ListLanguages: TListLanguages; // список всех возможных языков в системе
@@ -97,17 +99,73 @@ begin
   pRecord.StrPar1 := '';
 end;
 
+
+
+function ProfileLoad(pId: integer): TProfile;
+const
+  cNameFile: string = 'Profile1';
+var
+  vProfile: TProfile;
+  vPath: string;
+  vFullNameFile: string;
+  vFileText: TStringList;
+  i : integer;
+begin
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cNameFile;
+  // Теперь проверяем существует ли файл
+  if FileExists(vFullNameFile) then
+  begin
+    vFileText := TStringList.Create;
+    vFileText.LoadFromFile(vFullNameFile);
+
+    if vFileText.Count >= 5 then
+    begin
+      vProfile.Id := StrToInt(vFileText.Strings[0]);
+      vProfile.Name := vFileText.Strings[1];
+      vProfile.MainLanguage := vFileText.Strings[2];
+      vProfile.LanguagesTranslation := vFileText.Strings[3];
+      vProfile.ScreenResolution := vFileText.Strings[4];
+    end;
+  end;
+  ProfileLoad := vProfile;
+end;
+
+procedure ProfileSave(pProfile: TProfile);
+const
+  cNameFile: string = 'Profile1';
+var
+  vProfile: TProfile;
+  vPath: string;
+  vFullNameFile: string;
+  vFileText: TStringList;
+  i : integer;
+begin
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cNameFile;
+  vFileText := TStringList.Create;
+  vFileText.Add(IntToStr(pProfile.Id));
+  vFileText.Add(pProfile.Name);
+  vFileText.Add(pProfile.MainLanguage);
+  vFileText.Add(pProfile.LanguagesTranslation);
+  vFileText.Add(pProfile.ScreenResolution);
+  // сохраняем
+  vFileText.SaveToFile(vFullNameFile);
+end;
+
 function ProfileGet(pId: integer): TProfile;
 var
   vProfile: TProfile;
 begin
-  vProfile.Id := 1;
+{  vProfile.Id := 1;
   vProfile.Name := 'Основной';
   vProfile.MainLanguage := 'pl';
   vProfile.LanguagesTranslation := '/ru/en';
-  vProfile.ScreenResolution := '1366 х 768';
-  ProfileGet := vProfile;
+  vProfile.ScreenResolution := '1366 х 768';}
+  ProfileGet := ProfileLoad(pId);
 end;
+
+
 
 procedure TMain.RecFree(var pRec: Array of TRecord; var pCountRec: integer);
 var
@@ -396,31 +454,31 @@ begin
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного и в мемо
             // и далее из буфера обмена в мемо
-            //vRetTask := Task_6(LnCodeForTranslation, ListLanguages,
-            //  vIntControl);
+            // vRetTask := Task_6(LnCodeForTranslation, ListLanguages,
+            // vIntControl);
 
-              vIntControl := 0;
-              Clipboard.AsText := ' ';
-              vStrFor7 := Clipboard.AsText;
-              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
-              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-              // Delay(150);
-              keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-              keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
-              keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
-              keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-              // Отпускание левого Ctrl.
-              Delay(100);
-              vStrFor6 := Clipboard.AsText;
-              if vStrFor6 <> vStrFor7 then
-              begin
+            vIntControl := 0;
+            Clipboard.AsText := ' ';
+            vStrFor7 := Clipboard.AsText;
+            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+            Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            // Delay(150);
+            keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+            keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
+            keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+            // Отпускание левого Ctrl.
+            Delay(100);
+            vStrFor6 := Clipboard.AsText;
+            if vStrFor6 <> vStrFor7 then
+            begin
               vIntControl := 1;
               Label2.Caption := vStrFor6;
               LnCodeForTranslation := GetLnCodeFromList(vStrFor6,
-              ListLanguages);
-              end;
+                ListLanguages);
+            end;
 
             // showmessage('Из буфера обмена' + vStrFor6 + ' ' + LnCodeForTranslation);
           end;
@@ -592,6 +650,10 @@ begin
 
   if resultForm = mrOK then
   begin
+    Profile.MainLanguage := ListLanguages
+      [ClipInfoForm.LanguageComboBox.ItemIndex].LnCode;
+    // язык из формы запоминаем в профиль
+
     ClipName := ClipInfoForm.EditClipName.Text;
     // сохраняем имя в файл
     ClipInfo.Text := ClipName;
@@ -734,6 +796,11 @@ begin
   end
   else
     showmessage(vFullNameFile + ' не существует');
+end;
+
+procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  ProfileSave(Profile);
 end;
 
 procedure TMain.FormCreate(Sender: TObject);
