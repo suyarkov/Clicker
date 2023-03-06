@@ -4,6 +4,7 @@ interface
 
 uses
   uCodeKey, uLanguages, uTranslate, fmClipInfoForm, uTasks,
+  fmListLanguages,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
@@ -44,6 +45,7 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     ButtonStep3_1: TButton;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -54,6 +56,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure ButtonStep3_1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
+    procedure ReShowInfoProfile(Sender: TObject);
   private
     { Private declarations }
   var
@@ -101,7 +105,7 @@ end;
 
 
 
-function ProfileLoad(pId: integer): TProfile;
+function ProfileLoad(pId: integer; var pProfile): TProfile;
 const
   cNameFile: string = 'Profile1';
 var
@@ -157,11 +161,14 @@ function ProfileGet(pId: integer): TProfile;
 var
   vProfile: TProfile;
 begin
-{  vProfile.Id := 1;
+  // Ё“ќ ¬–≈ћ≈ЌЌџ… ƒЋя ѕ≈–¬»„Ќќ√ќ «јѕќЋЌ≈Ќ»я
+  vProfile.Id := 1;
   vProfile.Name := 'ќсновной';
   vProfile.MainLanguage := 'pl';
   vProfile.LanguagesTranslation := '/ru/en';
-  vProfile.ScreenResolution := '1366 х 768';}
+  vProfile.ScreenResolution := '1366 х 768';
+  ProfileGet := vProfile;
+
   ProfileGet := ProfileLoad(pId);
 end;
 
@@ -651,8 +658,10 @@ begin
   if resultForm = mrOK then
   begin
     Profile.MainLanguage := ListLanguages
-      [ClipInfoForm.LanguageComboBox.ItemIndex].LnCode;
-    // €зык из формы запоминаем в профиль
+      [(ClipInfoForm.LanguageComboBox.ItemIndex) +1].LnCode;
+    // отобразим надписи на форме согласно профилю
+    ReShowInfoProfile(Sender);
+   { // €зык из формы запоминаем в профиль
 
     ClipName := ClipInfoForm.EditClipName.Text;
     // сохран€ем им€ в файл
@@ -677,6 +686,7 @@ begin
     end
     else
       showmessage(vFullNameFile + ' не существует');
+      }
   end
   else
     MessageDlg('ƒействие отменено.', mtInformation, [mbYes], 0);
@@ -776,6 +786,22 @@ begin
     MessageDlg('ƒействие отменено.', mtInformation, [mbYes], 0);
 end;
 
+procedure TMain.Button1Click(Sender: TObject);
+begin
+ fLanguages.Show;
+end;
+
+// »нициализаци€ надписей формы согласной профилю
+procedure TMain.ReShowInfoProfile(Sender: TObject);
+begin
+  Main.Caption := Profile.Name + ' ' + Profile.ScreenResolution + ' ' +
+    '( актуальное ' + IntToStr(screen.Width) + ' х ' +
+    IntToStr(screen.Height) + ')';
+  LabelMainLanguage.Caption := 'язык канала ' + Profile.MainLanguage;
+  LabelCountLanguages.Caption := 'ѕеревод на ' +
+    IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' €зыка';
+end;
+
 procedure TMain.ButtonStep1Click(Sender: TObject);
 const
   cNameFile: string = 'Step1.cls';
@@ -806,15 +832,11 @@ end;
 procedure TMain.FormCreate(Sender: TObject);
 begin
   verProgram := '0.1';
-  Profile := ProfileGet(1);
   ListLanguages := InitListLanguages();
-  // »нициализаци€ надписей согласной профилю
-  Main.Caption := Profile.Name + ' ' + Profile.ScreenResolution + ' ' +
-    '( актуальное ' + IntToStr(screen.Width) + ' х ' +
-    IntToStr(screen.Height) + ')';
-  LabelMainLanguage.Caption := 'язык канала ' + Profile.MainLanguage;
-  LabelCountLanguages.Caption := 'ѕеревод на ' +
-    IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' €зыка';
+  Profile := ProfileGet(1);
+  // отобразим надписи на форме согласно профилю
+  ReShowInfoProfile(Sender);
+
   LnCodeForTranslation := 'unknow';
   ClipInfo := TStringList.Create;
   TranslateText := TStringList.Create;

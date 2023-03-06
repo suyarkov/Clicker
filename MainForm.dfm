@@ -144,6 +144,15 @@ object Main: TMain
     TabOrder = 9
     OnClick = ButtonStep3_1Click
   end
+  object Button1: TButton
+    Left = 168
+    Top = 144
+    Width = 65
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 10
+    OnClick = Button1Click
+  end
   object OpenDialog1: TOpenDialog
     Left = 207
     Top = 199
