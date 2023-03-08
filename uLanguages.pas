@@ -98,9 +98,8 @@ begin
     end
     else
     begin
-      vStr := ListLanguages[i].LnCode + ' ' + ListLanguages[i].NameForEnter +
-        ListLanguages[i].NameForRead + '.' + IntToStr(ListLanguages[i].Activ);
-      FileText.Add('vStr');
+      vStr := ListLanguages[i].LnCode + ' ' + ListLanguages[i].NameForEnter + '.' + IntToStr(ListLanguages[i].Activ);
+      FileText.Add(vStr);
     end;
   end;
   vPath := GetCurrentDir();
@@ -446,13 +445,14 @@ begin
   until (i >= 300) or (pListLanguages[i].LnCode = '');
 end;
 
+// получить следюущий код добавляемого языка
 function GetNextLnCodeForEnter(pLastLnCode: String;
   pListLanguages: TListLanguages): String;
 var
   i: integer;
   vFlNext: integer;
 begin
-  vFlNext := 0; // следующий пока не щем
+  vFlNext := 0; // следующий пока не ищем
   result := '';
   if pLastLnCode = '' then
   begin

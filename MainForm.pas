@@ -46,6 +46,7 @@ type
     XYMouse: TEdit;
     ButtonStep3_1: TButton;
     EditLanguages: TButton;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -58,6 +59,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EditLanguagesClick(Sender: TObject);
     procedure ReShowInfoProfile(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   var
@@ -73,6 +75,7 @@ type
     ClipInfo: TStringList;
     ClipName: string;
     TranslateText: TStringList; // Tstrings;
+    // function ProfileLoad(pId: integer; var pProfile : TProfile): TProfile;
     procedure RecordFree(var pRecord: TRecord);
     procedure RecFree(var pRec: Array of TRecord; var pCountRec: integer);
 
@@ -103,18 +106,17 @@ begin
   pRecord.StrPar1 := '';
 end;
 
-
-
-function ProfileLoad(pId: integer; var pProfile): TProfile;
+function ProfileLoad(pId: integer; var pProfile: TProfile): TProfile;
 const
   cNameFile: string = 'Profile1';
 var
-  vProfile: TProfile;
+  // vProfile: TProfile;
   vPath: string;
   vFullNameFile: string;
   vFileText: TStringList;
-  i : integer;
+  i: integer;
 begin
+  // vProfile := pProfile;
   vPath := GetCurrentDir();
   vFullNameFile := vPath + '/' + cNameFile;
   // Теперь проверяем существует ли файл
@@ -125,41 +127,46 @@ begin
 
     if vFileText.Count >= 5 then
     begin
-      vProfile.Id := StrToInt(vFileText.Strings[0]);
-      vProfile.Name := vFileText.Strings[1];
-      vProfile.MainLanguage := vFileText.Strings[2];
-      vProfile.LanguagesTranslation := vFileText.Strings[3];
-      vProfile.ScreenResolution := vFileText.Strings[4];
+      pProfile.Id := StrToInt(vFileText.Strings[0]);
+      pProfile.Name := vFileText.Strings[1];
+      pProfile.MainLanguage := vFileText.Strings[2];
+      pProfile.LanguagesTranslation := vFileText.Strings[3];
+      pProfile.ScreenResolution := vFileText.Strings[4];
     end;
   end;
-  if vProfile.MainLanguage = '' then
+  if pProfile.MainLanguage = '' then
   begin
     showmessage('Внимание! Основной язык не определен! Устанавливаем в PL');
-    vProfile.MainLanguage := 'pl';
+    pProfile.MainLanguage := 'pl';
   end;
-  ProfileLoad := vProfile;
+  ProfileLoad := pProfile;
 end;
 
 procedure ProfileSave(pProfile: TProfile);
 const
   cNameFile: string = 'Profile1';
 var
-  vProfile: TProfile;
+  // vProfile: TProfile;
   vPath: string;
   vFullNameFile: string;
   vFileText: TStringList;
-  i : integer;
+  i: integer;
 begin
-  vPath := GetCurrentDir();
-  vFullNameFile := vPath + '/' + cNameFile;
-  vFileText := TStringList.Create;
-  vFileText.Add(IntToStr(pProfile.Id));
-  vFileText.Add(pProfile.Name);
-  vFileText.Add(pProfile.MainLanguage);
-  vFileText.Add(pProfile.LanguagesTranslation);
-  vFileText.Add(pProfile.ScreenResolution);
-  // сохраняем
-  vFileText.SaveToFile(vFullNameFile);
+  if pProfile.MainLanguage <> '' then
+  begin
+    vPath := GetCurrentDir();
+    vFullNameFile := vPath + '/' + cNameFile;
+    vFileText := TStringList.Create;
+    vFileText.Add(IntToStr(pProfile.Id));
+    vFileText.Add(pProfile.Name);
+    vFileText.Add(pProfile.MainLanguage);
+    vFileText.Add(pProfile.LanguagesTranslation);
+    vFileText.Add(pProfile.ScreenResolution);
+    // сохраняем
+    vFileText.SaveToFile(vFullNameFile);
+  end
+  else
+    showmessage('Профиль не определен!');
 end;
 
 function ProfileGet(pId: integer): TProfile;
@@ -176,8 +183,6 @@ begin
 
   ProfileGet := ProfileLoad(pId, vProfile);
 end;
-
-
 
 procedure TMain.RecFree(var pRec: Array of TRecord; var pCountRec: integer);
 var
@@ -313,9 +318,9 @@ begin
   if pCountRec = null then
     pCountRec := 0;
   vStr := '10-2';
-  pMemo.Lines.add(vStr);
+  pMemo.Lines.Add(vStr);
   vStr := '11-';
-  pMemo.Lines.add(vStr);
+  pMemo.Lines.Add(vStr);
   if pCountRec > 2 then
   begin
     for i := 2 to pCountRec - 1 do
@@ -325,50 +330,50 @@ begin
           begin // перемещение
             vStr := '1-' + IntToStr(pRec[i].IntPar1) + '-' +
               IntToStr(pRec[i].IntPar2);
-            pMemo.Lines.add(vStr)
+            pMemo.Lines.Add(vStr)
           end;
 
         2:
           begin // клик
-            pMemo.Lines.add('2-');
+            pMemo.Lines.Add('2-');
           end;
 
         3:
           begin // пауза
             vStr := '3-' + IntToStr(pRec[i].IntPar1);
-            pMemo.Lines.add(vStr)
+            pMemo.Lines.Add(vStr)
           end;
 
         4:
           begin // скрол
             vStr := '4-' + IntToStr(pRec[i].IntPar1);
-            pMemo.Lines.add(vStr);
+            pMemo.Lines.Add(vStr);
           end;
 
         5:
           begin // текст, нажатие по нему клавиш
             vStr := '5-' + pRec[i].StrPar1;
-            pMemo.Lines.add(vStr);
+            pMemo.Lines.Add(vStr);
           end;
 
         6:
           begin // двойной клик, и копирование в буфер обмена выделенного
-            pMemo.Lines.add('6-'); // и далее из буфера обмена в мемо
+            pMemo.Lines.Add('6-'); // и далее из буфера обмена в мемо
           end;
 
         7:
           begin // перевод мемо
-            pMemo.Lines.add('7-');
+            pMemo.Lines.Add('7-');
           end;
 
         8:
           begin // перевод мемо2
-            pMemo.Lines.add('8-');
+            pMemo.Lines.Add('8-');
           end;
 
         9:
           begin // вставка из мемо в буфер, и далее в позицию
-            pMemo.Lines.add('9-');
+            pMemo.Lines.Add('9-');
           end;
 
       end;
@@ -422,7 +427,7 @@ var
   vLastLng: string;
 begin
   vLnFrom := Profile.MainLanguage;
-  //vLnFrom := 'ru'; // пока на время!!!
+  // vLnFrom := 'ru'; // пока на время!!!
   LoadKeyboardLayout(StrCopy(Layout, '00000419'), KLF_ACTIVATE);
   Delay(1000);
   vCountCicle := 0;
@@ -618,7 +623,7 @@ begin
     if ListLanguages[i].LnCode = '' then
       break;
 
-    ClipInfoForm.LanguageComboBox.Items.add(ListLanguages[i].LnCode + ' | ' +
+    ClipInfoForm.LanguageComboBox.Items.Add(ListLanguages[i].LnCode + ' | ' +
       ListLanguages[i].NameForRead);
     // Запомним тот который активен
     if ListLanguages[i].LnCode = Profile.MainLanguage then
@@ -662,8 +667,12 @@ begin
 
   if resultForm = mrOK then
   begin
-    Profile.MainLanguage := ListLanguages
-      [(ClipInfoForm.LanguageComboBox.ItemIndex) +1].LnCode;
+    if ListLanguages[(ClipInfoForm.LanguageComboBox.ItemIndex) + 1].LnCode <> ''
+    then
+    begin
+      Profile.MainLanguage := ListLanguages
+        [(ClipInfoForm.LanguageComboBox.ItemIndex) + 1].LnCode;
+    end;
     // отобразим надписи на форме согласно профилю
     ReShowInfoProfile(Sender);
     // язык из формы запоминаем в профиль
@@ -718,7 +727,7 @@ begin
     if ListLanguages[i].LnCode = '' then
       break;
 
-    ClipInfoForm.LanguageComboBox.Items.add(ListLanguages[i].LnCode + ' | ' +
+    ClipInfoForm.LanguageComboBox.Items.Add(ListLanguages[i].LnCode + ' | ' +
       ListLanguages[i].NameForRead);
     // Запомним тот который активен
     if ListLanguages[i].LnCode = Profile.MainLanguage then
@@ -762,6 +771,14 @@ begin
 
   if resultForm = mrOK then
   begin
+
+    if ListLanguages[(ClipInfoForm.LanguageComboBox.ItemIndex) + 1].LnCode <> ''
+    then
+    begin
+      Profile.MainLanguage := ListLanguages
+        [(ClipInfoForm.LanguageComboBox.ItemIndex) + 1].LnCode;
+    end;
+
     ClipName := ClipInfoForm.EditClipName.Text;
     // сохраняем имя в файл
     ClipInfo.Text := ClipName;
@@ -793,8 +810,8 @@ end;
 
 procedure TMain.EditLanguagesClick(Sender: TObject);
 var
-  i, vCountLanguages:integer;
-  vRes : integer;
+  i, vCountLanguages: integer;
+  vRes: integer;
 begin
   fLanguages.LanguagesGrid.ColWidths[0] := 30;
   fLanguages.LanguagesGrid.ColWidths[1] := 50;
@@ -804,11 +821,11 @@ begin
 
   // заголовки
   vCountLanguages := 0;
-  fLanguages.LanguagesGrid.Cells[0,0] := 'Id';
-  fLanguages.LanguagesGrid.Cells[1,0] := 'Код';
-  fLanguages.LanguagesGrid.Cells[2,0] := 'Для ввода';
-  fLanguages.LanguagesGrid.Cells[3,0] := 'Для чтения';
-  fLanguages.LanguagesGrid.Cells[4,0] := 'Активен';
+  fLanguages.LanguagesGrid.Cells[0, 0] := 'Id';
+  fLanguages.LanguagesGrid.Cells[1, 0] := 'Код';
+  fLanguages.LanguagesGrid.Cells[2, 0] := 'Для ввода';
+  fLanguages.LanguagesGrid.Cells[3, 0] := 'Для чтения';
+  fLanguages.LanguagesGrid.Cells[4, 0] := 'Активен';
   // наполняем StringGrid значениями
   for i := 1 to 1000 do
   begin
@@ -820,27 +837,29 @@ begin
     end
     else
     begin
-    fLanguages.LanguagesGrid.Cells[0,i] := IntToStr(ListLanguages[i].Id);
-    fLanguages.LanguagesGrid.Cells[1,i] := ListLanguages[i].LnCode;
-    fLanguages.LanguagesGrid.Cells[2,i] := ListLanguages[i].NameForEnter;
-    fLanguages.LanguagesGrid.Cells[3,i] := ListLanguages[i].NameForRead;
-    fLanguages.LanguagesGrid.Cells[4,i] := IntToStr(ListLanguages[i].Activ);
-    vCountLanguages := i;
+      fLanguages.LanguagesGrid.Cells[0, i] := IntToStr(ListLanguages[i].Id);
+      fLanguages.LanguagesGrid.Cells[1, i] := ListLanguages[i].LnCode;
+      fLanguages.LanguagesGrid.Cells[2, i] := ListLanguages[i].NameForEnter;
+      fLanguages.LanguagesGrid.Cells[3, i] := ListLanguages[i].NameForRead;
+      fLanguages.LanguagesGrid.Cells[4, i] := IntToStr(ListLanguages[i].Activ);
+      vCountLanguages := i;
     end;
   end;
 
   vRes := fLanguages.ShowModal;
-  if vRes = mrOk then
+  if vRes = mrOK then
   begin
-     for i := 1 to vCountLanguages do
-     begin
-       if (fLanguages.LanguagesGrid.Cells[0,i] = IntToStr(ListLanguages[i].Id)) and
-          (fLanguages.LanguagesGrid.Cells[1,i] = ListLanguages[i].LnCode) then
-          begin
-            ListLanguages[i].Activ := StrToInt(fLanguages.LanguagesGrid.Cells[4,i]);
-          end;
+    for i := 1 to vCountLanguages do
+    begin
+      if (fLanguages.LanguagesGrid.Cells[0, i] = IntToStr(ListLanguages[i].Id))
+        and (fLanguages.LanguagesGrid.Cells[1, i] = ListLanguages[i].LnCode)
+      then
+      begin
+        ListLanguages[i].Activ :=
+          StrToInt(fLanguages.LanguagesGrid.Cells[4, i]);
+      end;
 
-     end;
+    end;
     SaveListLanguages(ListLanguages);
   end;
 
@@ -855,6 +874,12 @@ begin
   LabelMainLanguage.Caption := 'Язык канала ' + Profile.MainLanguage;
   LabelCountLanguages.Caption := 'Перевод на ' +
     IntToStr(Trunc(Length(Profile.LanguagesTranslation) / 3)) + ' языка';
+end;
+
+procedure TMain.Button1Click(Sender: TObject);
+begin
+  showmessage(IntToStr(Profile.Id) + '_' + Profile.MainLanguage + '  ' +
+    IntToStr(InVK('Ч')));
 end;
 
 procedure TMain.ButtonStep1Click(Sender: TObject);

@@ -14,9 +14,15 @@ type
     DataSource1: TDataSource;
     ButtonOK: TButton;
     ButtonCancel: TButton;
+    Label1: TLabel;
+    LabelCount: TLabel;
+    Label2: TLabel;
+    LabelActiv: TLabel;
     procedure ButtonOKClick(Sender: TObject);
     procedure ButtonCancelClick(Sender: TObject);
     procedure LanguagesGridDblClick(Sender: TObject);
+    procedure LabelActivClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     /// procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
@@ -42,6 +48,24 @@ begin
   ModalResult := mrOk;
 end;
 
+procedure TfLanguages.FormShow(Sender: TObject);
+begin
+  LabelActiv.OnClick(Sender);
+end;
+
+procedure TfLanguages.LabelActivClick(Sender: TObject);
+var i, vCount :integer;
+begin
+  vCount := 0;
+  for I := 1 to LanguagesGrid.RowCount - 1 do
+  begin
+    if LanguagesGrid.Cells[4,i] = '1' then
+       vCount := vCount + 1;
+  end;
+  LabelActiv.Caption := IntToStr(vCount);
+  LabelCount.Caption := IntToStr(LanguagesGrid.RowCount - 1);
+end;
+
 procedure TfLanguages.LanguagesGridDblClick(Sender: TObject);
 begin
   if LanguagesGrid.Row > 0 then
@@ -57,6 +81,7 @@ begin
     end;
   end;
 
+  LabelActiv.OnClick(Sender);
 end;
 
 end.

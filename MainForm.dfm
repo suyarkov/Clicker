@@ -152,12 +152,21 @@ object Main: TMain
   end
   object EditLanguages: TButton
     Left = 152
-    Top = 144
+    Top = 134
     Width = 91
     Height = 25
     Caption = #1042#1099#1073#1086#1088' '#1103#1079#1099#1082#1086#1074
     TabOrder = 10
     OnClick = EditLanguagesClick
+  end
+  object Button1: TButton
+    Left = 152
+    Top = 168
+    Width = 89
+    Height = 25
+    Caption = #1058#1077#1089#1090' '#1087#1088#1086#1080#1092#1083#1103
+    TabOrder = 11
+    OnClick = Button1Click
   end
   object OpenDialog1: TOpenDialog
     Left = 207
