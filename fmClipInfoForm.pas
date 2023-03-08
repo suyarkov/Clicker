@@ -57,7 +57,6 @@ var
 begin
   countLetters := Length(EditClipName.Text);
   EditCountNameLetters.Text := IntToStr(countLetters);
-
 end;
 
 procedure TClipInfoForm.MemoClipInfoChange(Sender: TObject);
@@ -72,7 +71,6 @@ begin
   end;
 
   EditCountInfoLetters.Text := IntToStr(countLetters);
-
 end;
 
 procedure SetLanguageComboBox(var pListLanguages: TListLanguages; pMainLanguage : String);

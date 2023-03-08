@@ -25,9 +25,15 @@ object Main: TMain
   object LabelMainLanguage: TLabel
     Left = 8
     Top = 8
-    Width = 107
+    Width = 109
     Height = 15
     Caption = 'LabelMainLanguage'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object Label2: TLabel
     Left = 8
@@ -144,14 +150,14 @@ object Main: TMain
     TabOrder = 9
     OnClick = ButtonStep3_1Click
   end
-  object Button1: TButton
-    Left = 168
+  object EditLanguages: TButton
+    Left = 152
     Top = 144
-    Width = 65
+    Width = 91
     Height = 25
-    Caption = 'Button1'
+    Caption = #1042#1099#1073#1086#1088' '#1103#1079#1099#1082#1086#1074
     TabOrder = 10
-    OnClick = Button1Click
+    OnClick = EditLanguagesClick
   end
   object OpenDialog1: TOpenDialog
     Left = 207

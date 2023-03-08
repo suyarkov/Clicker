@@ -23,6 +23,8 @@ type
 
 function InitListLanguages(): TListLanguages; // инициализаци€ из файла
 function InitListLanguagesStatic(): TListLanguages;
+procedure SaveListLanguages(ListLanguages: TListLanguages);
+// сохранение €зыков в файла
 
 function GetLnCode(pNameRead: String): String;
 function GetLnCodeFromList(pNameRead: String;
@@ -59,6 +61,7 @@ begin
       begin
         vStr := FileText.Strings[i];
         vPos := Pos(' ', vStr);
+        vList[i + 1].Id := i;
         vList[i + 1].LnCode := Copy(vStr, 1, vPos - 1);
         vStr := Copy(vStr, vPos + 1);
         vPos := Pos('.', vStr);
@@ -71,6 +74,38 @@ begin
   end
   else
     showmessage(vFullNameFile + ' не существует файла с €зыками');
+
+end;
+
+// сохранение настройки €зыков
+procedure SaveListLanguages(ListLanguages: TListLanguages);
+const
+  cNameFile: string = 'Languages.lng';
+var
+  vPath: string;
+  vFullNameFile: string;
+  FileText: TStringList;
+  i: integer;
+  vStr: string;
+begin
+  FileText := TStringList.Create;
+  for i := 1 to 1000 do
+  begin
+    // пустые уже не добавл€ем а опусташаю
+    if ListLanguages[i].LnCode = '' then
+    begin
+      break;
+    end
+    else
+    begin
+      vStr := ListLanguages[i].LnCode + ' ' + ListLanguages[i].NameForEnter +
+        ListLanguages[i].NameForRead + '.' + IntToStr(ListLanguages[i].Activ);
+      FileText.Add('vStr');
+    end;
+  end;
+  vPath := GetCurrentDir();
+  vFullNameFile := vPath + '/' + cNameFile;
+  FileText.SaveToFile(vFullNameFile);
 
 end;
 
@@ -386,8 +421,6 @@ begin
   result := GetLnCodeFromList(pNameRead, vList);
 end;
 
-
-
 // по строке с наименование €зыке определ€ем сам €зык
 function GetLnCodeFromList(pNameRead: String;
   pListLanguages: TListLanguages): String;
@@ -412,8 +445,6 @@ begin
     inc(i);
   until (i >= 300) or (pListLanguages[i].LnCode = '');
 end;
-
-
 
 function GetNextLnCodeForEnter(pLastLnCode: String;
   pListLanguages: TListLanguages): String;
@@ -446,8 +477,6 @@ begin
     inc(i);
   until (i >= 300) or (pListLanguages[i].LnCode = '');
 end;
-
-
 
 // по строке с кодом €зыка определ€ем сам €зык дл€ ввода
 function GetNameEnterOnLnCodeFromList(pLnCode: String;

@@ -45,7 +45,7 @@ type
     GetXYMouse: TButton;
     XYMouse: TEdit;
     ButtonStep3_1: TButton;
-    Button1: TButton;
+    EditLanguages: TButton;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -56,7 +56,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure ButtonStep3_1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Button1Click(Sender: TObject);
+    procedure EditLanguagesClick(Sender: TObject);
     procedure ReShowInfoProfile(Sender: TObject);
   private
     { Private declarations }
@@ -132,6 +132,11 @@ begin
       vProfile.ScreenResolution := vFileText.Strings[4];
     end;
   end;
+  if vProfile.MainLanguage = '' then
+  begin
+    showmessage('Внимание! Основной язык не определен! Устанавливаем в PL');
+    vProfile.MainLanguage := 'pl';
+  end;
   ProfileLoad := vProfile;
 end;
 
@@ -169,7 +174,7 @@ begin
   vProfile.ScreenResolution := '1366 х 768';
   ProfileGet := vProfile;
 
-  ProfileGet := ProfileLoad(pId);
+  ProfileGet := ProfileLoad(pId, vProfile);
 end;
 
 
@@ -417,7 +422,7 @@ var
   vLastLng: string;
 begin
   vLnFrom := Profile.MainLanguage;
-  vLnFrom := 'ru'; // пока на время!!!
+  //vLnFrom := 'ru'; // пока на время!!!
   LoadKeyboardLayout(StrCopy(Layout, '00000419'), KLF_ACTIVATE);
   Delay(1000);
   vCountCicle := 0;
@@ -661,7 +666,7 @@ begin
       [(ClipInfoForm.LanguageComboBox.ItemIndex) +1].LnCode;
     // отобразим надписи на форме согласно профилю
     ReShowInfoProfile(Sender);
-   { // язык из формы запоминаем в профиль
+    // язык из формы запоминаем в профиль
 
     ClipName := ClipInfoForm.EditClipName.Text;
     // сохраняем имя в файл
@@ -686,7 +691,7 @@ begin
     end
     else
       showmessage(vFullNameFile + ' не существует');
-      }
+
   end
   else
     MessageDlg('Действие отменено.', mtInformation, [mbYes], 0);
@@ -786,9 +791,59 @@ begin
     MessageDlg('Действие отменено.', mtInformation, [mbYes], 0);
 end;
 
-procedure TMain.Button1Click(Sender: TObject);
+procedure TMain.EditLanguagesClick(Sender: TObject);
+var
+  i, vCountLanguages:integer;
+  vRes : integer;
 begin
- fLanguages.Show;
+  fLanguages.LanguagesGrid.ColWidths[0] := 30;
+  fLanguages.LanguagesGrid.ColWidths[1] := 50;
+  fLanguages.LanguagesGrid.ColWidths[2] := 200;
+  fLanguages.LanguagesGrid.ColWidths[3] := 200;
+  fLanguages.LanguagesGrid.ColWidths[4] := 60;
+
+  // заголовки
+  vCountLanguages := 0;
+  fLanguages.LanguagesGrid.Cells[0,0] := 'Id';
+  fLanguages.LanguagesGrid.Cells[1,0] := 'Код';
+  fLanguages.LanguagesGrid.Cells[2,0] := 'Для ввода';
+  fLanguages.LanguagesGrid.Cells[3,0] := 'Для чтения';
+  fLanguages.LanguagesGrid.Cells[4,0] := 'Активен';
+  // наполняем StringGrid значениями
+  for i := 1 to 1000 do
+  begin
+    // пустые уже не добавляем а опусташаю
+    if ListLanguages[i].LnCode = '' then
+    begin
+      fLanguages.LanguagesGrid.RowCount := vCountLanguages + 1;
+      break;
+    end
+    else
+    begin
+    fLanguages.LanguagesGrid.Cells[0,i] := IntToStr(ListLanguages[i].Id);
+    fLanguages.LanguagesGrid.Cells[1,i] := ListLanguages[i].LnCode;
+    fLanguages.LanguagesGrid.Cells[2,i] := ListLanguages[i].NameForEnter;
+    fLanguages.LanguagesGrid.Cells[3,i] := ListLanguages[i].NameForRead;
+    fLanguages.LanguagesGrid.Cells[4,i] := IntToStr(ListLanguages[i].Activ);
+    vCountLanguages := i;
+    end;
+  end;
+
+  vRes := fLanguages.ShowModal;
+  if vRes = mrOk then
+  begin
+     for i := 1 to vCountLanguages do
+     begin
+       if (fLanguages.LanguagesGrid.Cells[0,i] = IntToStr(ListLanguages[i].Id)) and
+          (fLanguages.LanguagesGrid.Cells[1,i] = ListLanguages[i].LnCode) then
+          begin
+            ListLanguages[i].Activ := StrToInt(fLanguages.LanguagesGrid.Cells[4,i]);
+          end;
+
+     end;
+    SaveListLanguages(ListLanguages);
+  end;
+
 end;
 
 // Инициализация надписей формы согласной профилю
