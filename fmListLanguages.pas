@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Data.DB, Vcl.DBGrids,
-  Vcl.StdCtrls;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons;
 
 type
   TfLanguages = class(TForm)
@@ -18,11 +18,16 @@ type
     LabelCount: TLabel;
     Label2: TLabel;
     LabelActiv: TLabel;
+    BitBtn1: TBitBtn;
+    SpeedButton1: TSpeedButton;
+    Image1: TImage;
     procedure ButtonOKClick(Sender: TObject);
     procedure ButtonCancelClick(Sender: TObject);
     procedure LanguagesGridDblClick(Sender: TObject);
     procedure LabelActivClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure LanguagesGridDrawCell(Sender: TObject; ACol, ARow: Integer;
+      Rect: TRect; State: TGridDrawState);
     /// procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
@@ -54,13 +59,14 @@ begin
 end;
 
 procedure TfLanguages.LabelActivClick(Sender: TObject);
-var i, vCount :integer;
+var
+  i, vCount: Integer;
 begin
   vCount := 0;
-  for I := 1 to LanguagesGrid.RowCount - 1 do
+  for i := 1 to LanguagesGrid.RowCount - 1 do
   begin
-    if LanguagesGrid.Cells[4,i] = '1' then
-       vCount := vCount + 1;
+    if LanguagesGrid.Cells[4, i] = '1' then
+      vCount := vCount + 1;
   end;
   LabelActiv.Caption := IntToStr(vCount);
   LabelCount.Caption := IntToStr(LanguagesGrid.RowCount - 1);
@@ -82,6 +88,21 @@ begin
   end;
 
   LabelActiv.OnClick(Sender);
+end;
+
+procedure TfLanguages.LanguagesGridDrawCell(Sender: TObject;
+  ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+  var vRect: TRect;
+begin
+  vRect.Create(Rect.Left,Rect.Top,Rect.Left+25,Rect.Top+25);
+  if (ACol = 4) or (ACol = 5) then
+  begin
+    if (LanguagesGrid.Cells[4, ARow] = '1') then
+    begin
+      LanguagesGrid.Canvas.StretchDraw(vRect, Image1.Picture.Graphic);
+    end;
+  end;
+
 end;
 
 end.

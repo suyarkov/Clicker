@@ -179,8 +179,8 @@ begin
       Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
       // вставить из буфера в окно
       keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-      keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
-      keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+      keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'V'.
+      keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'V'.
       keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
       // Отпускание левого Ctrl.
     end;

@@ -513,16 +513,41 @@ begin
 
               TranslateText.Text := vStrFor7;
               // скопируем из мемо в буфер обена
-              Clipboard.AsText := vStrFor7; // TranslateText.Text[0];
-              // активируем окно вставки текста
+
+              vStrFor6 :='';
+
+              Clipboard.AsText := '';
+              // Проверка, что поле было пустое до вставки
+              // двойной клик, копирование в буфер и смотрим чтоб было пусто
+
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-              // вставить из буфера в окно
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+
+              // Delay(150);
               keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-              keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
-              keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+              keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
+              keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
               keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
               // Отпускание левого Ctrl.
+              Delay(100);
+
+              vStrFor6 := Clipboard.AsText;
+
+              IF vStrFor6 = '' THEN // если поле пусток
+              begin
+                // скопируем из мемо в буфер обена
+                Clipboard.AsText := vStrFor7; // TranslateText.Text[0];
+
+                // вставить из буфера в окно
+                keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+                keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'V'.
+                keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'V'.
+                keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+                // Отпускание левого Ctrl.
+                Delay(100);
+              end;
             end;
           end;
 
@@ -534,17 +559,37 @@ begin
                 LnCodeForTranslation);
               if Length(TranslateText.Text) > 5000 then // в длинну упрячем
                 TranslateText.Text := Copy(TranslateText.Text, 1, 5000);
-              // скопируем из мемо в буфер обена
-              Clipboard.AsText := TranslateText.Text;
-              // активируем окно вставки текста
+
+              Clipboard.AsText := '';
+              // Проверка, что поле было пустое до вставки
+              // двойной клик, копирование в буфер и смотрим чтоб было пусто
+              vStrFor7 := Clipboard.AsText;
               Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
               Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-              // вставить из буфера в окно
+              Mouse_Event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0); // левый клик
+              Mouse_Event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+
+              // Delay(150);
               keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
-              keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
-              keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+              keybd_event(Ord('C'), 0, 0, 0); // Нажатие 'C'.
+              keybd_event(Ord('C'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
               keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
               // Отпускание левого Ctrl.
+              Delay(100);
+
+              vStrFor6 := Clipboard.AsText;
+
+              IF vStrFor6 = '' THEN // если поле пусток
+              begin
+                // скопируем из мемо в буфер обена
+                Clipboard.AsText := TranslateText.Text;
+                // вставить из буфера в окно
+                keybd_event(VK_LCONTROL, 0, 0, 0); // Нажатие левого Ctrl.
+                keybd_event(Ord('V'), 0, 0, 0); // Нажатие 'C'.
+                keybd_event(Ord('V'), 0, KEYEVENTF_KEYUP, 0); // Отпускание 'C'.
+                keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
+                // Отпускание левого Ctrl.
+              end;
             end;
           end;
 
@@ -817,7 +862,8 @@ begin
   fLanguages.LanguagesGrid.ColWidths[1] := 50;
   fLanguages.LanguagesGrid.ColWidths[2] := 200;
   fLanguages.LanguagesGrid.ColWidths[3] := 200;
-  fLanguages.LanguagesGrid.ColWidths[4] := 60;
+  fLanguages.LanguagesGrid.ColWidths[4] := 20;
+  fLanguages.LanguagesGrid.ColWidths[5] := 25;
 
   // заголовки
   vCountLanguages := 0;
@@ -825,7 +871,7 @@ begin
   fLanguages.LanguagesGrid.Cells[1, 0] := 'Код';
   fLanguages.LanguagesGrid.Cells[2, 0] := 'Для ввода';
   fLanguages.LanguagesGrid.Cells[3, 0] := 'Для чтения';
-  fLanguages.LanguagesGrid.Cells[4, 0] := 'Активен';
+  fLanguages.LanguagesGrid.Cells[5, 0] := 'Активен';
   // наполняем StringGrid значениями
   for i := 1 to 1000 do
   begin
