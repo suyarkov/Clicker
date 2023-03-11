@@ -42,6 +42,38 @@ object Main: TMain
     Height = 15
     Caption = 'Label2'
   end
+  object Label1: TLabel
+    Left = 280
+    Top = 8
+    Width = 11
+    Height = 15
+    Caption = 'ID'
+    FocusControl = DBEdit1
+  end
+  object Label3: TLabel
+    Left = 280
+    Top = 55
+    Width = 34
+    Height = 15
+    Caption = 'NAME'
+    FocusControl = DBMemo1
+  end
+  object Label4: TLabel
+    Left = 280
+    Top = 171
+    Width = 22
+    Height = 15
+    Caption = 'SIZE'
+    FocusControl = DBMemo2
+  end
+  object Label5: TLabel
+    Left = 280
+    Top = 283
+    Width = 54
+    Height = 15
+    Caption = 'MAINLNG'
+    FocusControl = DBMemo3
+  end
   object ButtonStep1: TButton
     Left = 8
     Top = 79
@@ -97,8 +129,8 @@ object Main: TMain
     OnClick = LoadTaskClick
   end
   object Memo1: TMemo
-    Left = 8
-    Top = 254
+    Left = 0
+    Top = 396
     Width = 521
     Height = 89
     Lines.Strings = (
@@ -168,8 +200,87 @@ object Main: TMain
     TabOrder = 11
     OnClick = Button1Click
   end
+  object DBEdit1: TDBEdit
+    Left = 280
+    Top = 26
+    Width = 154
+    Height = 23
+    DataField = 'ID'
+    DataSource = DataSource1
+    TabOrder = 12
+  end
+  object DBMemo1: TDBMemo
+    Left = 280
+    Top = 76
+    Width = 185
+    Height = 89
+    DataField = 'NAME'
+    DataSource = DataSource1
+    TabOrder = 13
+  end
+  object DBMemo2: TDBMemo
+    Left = 280
+    Top = 192
+    Width = 185
+    Height = 89
+    DataField = 'SIZE'
+    DataSource = DataSource1
+    TabOrder = 14
+  end
+  object DBMemo3: TDBMemo
+    Left = 280
+    Top = 301
+    Width = 185
+    Height = 89
+    DataField = 'MAINLNG'
+    DataSource = DataSource1
+    TabOrder = 15
+  end
   object OpenDialog1: TOpenDialog
-    Left = 207
-    Top = 199
+    Left = 599
+    Top = 111
+  end
+  object ClickConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Click')
+    Connected = True
+    LoginPrompt = False
+    Left = 547
+    Top = 15
+  end
+  object ProfileTable: TFDQuery
+    Connection = ClickConnection
+    SQL.Strings = (
+      'SELECT * FROM Profile')
+    Left = 608
+    Top = 9
+    object ProfileTableID: TFDAutoIncField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object ProfileTableNAME: TWideMemoField
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object ProfileTableSIZE: TWideMemoField
+      FieldName = 'SIZE'
+      Origin = 'SIZE'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object ProfileTableMAINLNG: TWideMemoField
+      FieldName = 'MAINLNG'
+      Origin = 'MAINLNG'
+      Required = True
+      BlobType = ftWideMemo
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = ProfileTable
+    Left = 496
+    Top = 16
   end
 end

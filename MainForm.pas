@@ -8,7 +8,13 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
-  ClipBrd;
+  ClipBrd, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
+  FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
+  FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
+  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
+  Vcl.DBCtrls, Data.DB, Vcl.Mask, Vcl.ExtCtrls, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
 
 // Настройка, наименование, языки, разрешение экрана, основной язык канала.
 type
@@ -47,6 +53,21 @@ type
     ButtonStep3_1: TButton;
     EditLanguages: TButton;
     Button1: TButton;
+    ClickConnection: TFDConnection;
+    ProfileTable: TFDQuery;
+    ProfileTableID: TFDAutoIncField;
+    ProfileTableNAME: TWideMemoField;
+    ProfileTableSIZE: TWideMemoField;
+    ProfileTableMAINLNG: TWideMemoField;
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    DataSource1: TDataSource;
+    Label3: TLabel;
+    DBMemo1: TDBMemo;
+    Label4: TLabel;
+    DBMemo2: TDBMemo;
+    Label5: TLabel;
+    DBMemo3: TDBMemo;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -863,7 +884,6 @@ begin
   fLanguages.LanguagesGrid.ColWidths[2] := 200;
   fLanguages.LanguagesGrid.ColWidths[3] := 200;
   fLanguages.LanguagesGrid.ColWidths[4] := 20;
-  fLanguages.LanguagesGrid.ColWidths[5] := 25;
 
   // заголовки
   vCountLanguages := 0;
@@ -871,7 +891,6 @@ begin
   fLanguages.LanguagesGrid.Cells[1, 0] := 'Код';
   fLanguages.LanguagesGrid.Cells[2, 0] := 'Для ввода';
   fLanguages.LanguagesGrid.Cells[3, 0] := 'Для чтения';
-  fLanguages.LanguagesGrid.Cells[5, 0] := 'Активен';
   // наполняем StringGrid значениями
   for i := 1 to 1000 do
   begin
