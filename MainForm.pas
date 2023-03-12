@@ -4,7 +4,7 @@ interface
 
 uses
   uCodeKey, uLanguages, uTranslate, fmClipInfoForm, uTasks,
-  fmListLanguages,
+  fmListLanguages, //frmFirst,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids,
@@ -53,21 +53,6 @@ type
     ButtonStep3_1: TButton;
     EditLanguages: TButton;
     Button1: TButton;
-    ClickConnection: TFDConnection;
-    ProfileTable: TFDQuery;
-    ProfileTableID: TFDAutoIncField;
-    ProfileTableNAME: TWideMemoField;
-    ProfileTableSIZE: TWideMemoField;
-    ProfileTableMAINLNG: TWideMemoField;
-    Label1: TLabel;
-    DBEdit1: TDBEdit;
-    DataSource1: TDataSource;
-    Label3: TLabel;
-    DBMemo1: TDBMemo;
-    Label4: TLabel;
-    DBMemo2: TDBMemo;
-    Label5: TLabel;
-    DBMemo3: TDBMemo;
     procedure FormCreate(Sender: TObject);
     procedure LoadTaskClick(Sender: TObject);
     procedure StartClick(Sender: TObject);
@@ -985,6 +970,8 @@ begin
   LnCodeForTranslation := 'unknow';
   ClipInfo := TStringList.Create;
   TranslateText := TStringList.Create;
+
+  //FirstForm.ShowModal;
 end;
 
 procedure TMain.FormShow(Sender: TObject);

@@ -127,6 +127,15 @@
             <Form>FirstForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="DataSQLite.pas">
+            <Form>SQLiteModule</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Unit1.pas">
+            <Form>EditProfileForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -12,7 +12,9 @@ uses
   fmListLanguages in 'fmListLanguages.pas' {fLanguages},
   Vcl.Themes,
   Vcl.Styles,
-  frmFirst in 'frmFirst.pas' {FirstForm};
+  frmFirst in 'frmFirst.pas' {FirstForm},
+  DataSQLite in 'DataSQLite.pas' {SQLiteModule: TDataModule},
+  Unit1 in 'Unit1.pas' {EditProfileForm};
 
 {$R *.res}
 
@@ -20,10 +22,12 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Silver');
+  Application.CreateForm(TFirstForm, FirstForm);
   Application.CreateForm(TMain, Main);
   Application.CreateForm(TClipInfoForm, ClipInfoForm);
   Application.CreateForm(TProfileForm, ProfileForm);
   Application.CreateForm(TfLanguages, fLanguages);
-  Application.CreateForm(TFirstForm, FirstForm);
+  Application.CreateForm(TSQLiteModule, SQLiteModule);
+  Application.CreateForm(TEditProfileForm, EditProfileForm);
   Application.Run;
 end.
