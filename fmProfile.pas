@@ -10,17 +10,17 @@ uses
 
 type
   TProfileForm = class(TForm)
-    Label1: TLabel;
-    Label3: TLabel;
+    Yfbv: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     BitBtnOk: TBitBtn;
     BitBtnCancel: TBitBtn;
-    Memo1: TMemo;
-    Memo2: TMemo;
-    Memo3: TMemo;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
     procedure BitBtnCancelClick(Sender: TObject);
     procedure BitBtnOkClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,16 +44,20 @@ var
   vQuery: string;
 
 begin
-  {
-    vQuery := 'insert into profile (NAME, SIZE, MAINLNG)'
-    + ' VALUES (''' + Memo1.Text +
-    ''', ' +  Memo2.Text +
-    ''', ''' + Memo3.Text + ''')'; }
-  vQuery := 'insert into profile (NAME, SIZE, MAINLNG) VALUES (''Проба 2'', ''333[34'', ''pl'')';
+  // сохраненние введенного
+  vQuery := 'insert into profile (NAME, SIZE, MAINLNG)' + ' VALUES (''' +
+    Edit1.Text + ''', ''' +  Edit2.Text +''', ''' + Edit3.Text + ''')';
+  // vQuery := 'insert into profile (NAME, SIZE, MAINLNG) VALUES (''Проба 2'', ''333[34'', ''pl'')';
   SQLiteModule.ClickConnection.ExecSQL(vQuery);
   // SQLiteModule.ClickConnection.ExecSQL('select NAME from Profile', nil,  results);
-  SQLiteModule.ClickConnection.Commit;
+  SQLiteModule.ClickConnection.Close;
   ModalResult := mrOk;
+end;
+
+procedure TProfileForm.FormShow(Sender: TObject);
+begin
+  if Edit2.Text = '' then
+    Edit2.Text := IntToStr(screen.Width) + ' х ' + IntToStr(screen.Height);
 end;
 
 end.

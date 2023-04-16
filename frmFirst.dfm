@@ -3,8 +3,8 @@ object FirstForm: TFirstForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = 'ClickTranslater for Youtube'
-  ClientHeight = 243
-  ClientWidth = 367
+  ClientHeight = 288
+  ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -59,6 +59,7 @@ object FirstForm: TFirstForm
     Width = 185
     Height = 161
     ItemHeight = 15
+    PopupMenu = PopupMenu1
     TabOrder = 3
   end
   object ImageList1: TImageList
@@ -208,5 +209,17 @@ object FirstForm: TFirstForm
     Params = <>
     Left = 320
     Top = 32
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 392
+    Top = 32
+    object EditProfile: TMenuItem
+      Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
+      OnClick = EditProfileClick
+    end
+    object DelProfile: TMenuItem
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnClick = DelProfileClick
+    end
   end
 end
